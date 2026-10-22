@@ -1,0 +1,1398 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel de administración – BarberAg</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="app-shell">
+
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div>
+        <div class="logo">Barber<span>Ag</span></div>
+        <div class="panel-tag">Panel admin · <span data-negocio="nombre_negocio">BarberAg</span></div>
+      </div>
+      <button class="sidebar-close" id="sidebarClose"><i class="bi bi-x-lg"></i></button>
+    </div>
+    <nav class="sidebar-nav" id="sidebarNav">
+      <a data-target="dashboard" data-title="Panel de administración" data-sub="Resumen general de la barbería" class="active"><i class="bi bi-speedometer2"></i> Dashboard</a>
+      <a data-target="citas" data-title="Citas" data-sub="Gestión de todas las citas agendadas · RF-01, RF-12, RF-17"><i class="bi bi-calendar-check"></i> Citas</a>
+      <a data-target="barberos" data-title="Barberos" data-sub="Equipo activo y su desempeño · RF-46, RF-51"><i class="bi bi-person-badge"></i> Barberos</a>
+      <a data-target="servicios" data-title="Servicios" data-sub="Catálogo de servicios y precios · RF-33, RF-34, RF-35"><i class="bi bi-scissors"></i> Servicios</a>
+      <a data-target="clientes" data-title="Clientes" data-sub="Base de clientes registrados · RF-42, RF-49, RF-53"><i class="bi bi-people"></i> Clientes</a>
+      <a data-target="suscripciones" data-title="Suscripciones" data-sub="Planes activos y suscriptores · RF-68, RF-70, RF-77"><i class="bi bi-star"></i> Suscripciones</a>
+      <a data-target="resenas" data-title="Reseñas" data-sub="Calificaciones y comentarios de clientes"><i class="bi bi-chat-square-text"></i> Reseñas</a>
+      <a data-target="pagos" data-title="Pagos" data-sub="Historial de cobros y reembolsos · RF-56, RF-64, RF-67"><i class="bi bi-cash-stack"></i> Pagos</a>
+      <a data-target="reportes" data-title="Reportes" data-sub="Ingresos y desempeño del negocio · RF-64, RF-40"><i class="bi bi-bar-chart"></i> Reportes</a>
+      <a data-target="configuracion" data-title="Configuración" data-sub="Datos del negocio y preferencias · RF-51, RNF-33"><i class="bi bi-gear"></i> Configuración</a>
+      <a data-target="perfil" data-title="Mi perfil" data-sub="Tus datos personales"><i class="bi bi-person-circle"></i> Mi perfil</a>
+    </nav>
+    <div class="sidebar-foot">
+      <a href="#" id="logoutLink"><i class="bi bi-box-arrow-left"></i> Cerrar sesión</a>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main-content">
+
+    <div class="topbar">
+      <div class="d-flex align-items-start gap-3">
+        <button class="mobile-toggle" id="mobileToggle"><i class="bi bi-list"></i></button>
+        <div>
+          <h1 id="pageTitle">Panel de administración</h1>
+          <div class="subtitle" id="pageSub">Cargando…</div>
+        </div>
+      </div>
+      <div class="user-chip">
+        <div class="text-end d-none d-sm-block">
+          <div class="name" id="userChipName">—</div>
+          <div class="role">Administrador</div>
+        </div>
+        <div class="avatar" id="userChipAvatar">—</div>
+      </div>
+    </div>
+
+    <!-- ═══════════ DASHBOARD ═══════════ -->
+    <section class="content-section active" id="sec-dashboard">
+      <div class="row g-3 mb-3">
+        <div class="col-6 col-lg-3">
+          <div class="stat-card">
+            <div class="lbl">Citas hoy</div>
+            <div class="val" id="statCitasHoy">—</div>
+            <div class="delta neutral" id="statCitasHoyDelta">cargando...</div>
+          </div>
+        </div>
+        <div class="col-6 col-lg-3">
+          <div class="stat-card">
+            <div class="lbl">Ingresos del día</div>
+            <div class="val" id="statIngresosHoy">—</div>
+            <div class="delta neutral">citas completadas hoy</div>
+          </div>
+        </div>
+        <div class="col-6 col-lg-3">
+          <div class="stat-card">
+            <div class="lbl">Clientes nuevos</div>
+            <div class="val" id="statClientesNuevos">—</div>
+            <div class="delta neutral">esta semana</div>
+          </div>
+        </div>
+        <div class="col-6 col-lg-3">
+          <div class="stat-card">
+            <div class="lbl">Calificación</div>
+            <div class="val" id="statCalificacion">—</div>
+            <div class="delta neutral">promedio de barberos</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row g-3">
+        <div class="col-lg-8">
+          <div class="panel h-100">
+            <div class="panel-head">
+              <div>
+                <h5>Próximas citas de hoy</h5>
+                <div class="rf-tag">RF-01 · RF-03 · RF-05</div>
+              </div>
+              <a class="link" data-goto="citas">Ver todas</a>
+            </div>
+            <div class="dtable-wrap">
+              <table class="dtable">
+                <thead><tr><th>Cliente</th><th>Servicio</th><th>Barbero</th><th>Hora</th><th>Estado</th></tr></thead>
+                <tbody id="dashProximasCitas">
+                  <tr><td colspan="5" class="text-center text-muted py-3">Cargando citas…</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4">
+          <div class="panel mb-3">
+            <div class="panel-head"><h5>Barberos activos</h5></div>
+            <div id="dashBarberosActivos">
+              <div class="text-center text-muted py-3" style="font-size:.85rem">Cargando barberos…</div>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-head"><h5>Reseña reciente</h5></div>
+            <div id="dashResenaReciente"><div class="text-muted" style="font-size:.85rem">Cargando…</div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════ CITAS ═══════════ -->
+    <section class="content-section" id="sec-citas">
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <h5>Todas las citas</h5>
+            <div class="rf-tag">RF-01 · RF-03 · RF-12 · RF-15 · RF-17 · RF-21</div>
+          </div>
+          <div class="d-flex gap-2 flex-wrap">
+            <button class="btn-gold" onclick="abrirNuevaCita()" title="Agendar una cita a nombre de un cliente (RF-01)"><i class="bi bi-plus-lg"></i> Nueva cita</button>
+            <div class="search-input-wrap"><input type="text" placeholder="Buscar cliente..." id="citasSearch"></div>
+            <select class="form-select" style="width:auto" id="citasFiltro">
+              <option value="todas">Todos los estados</option>
+              <option value="confirmada">Confirmada</option>
+              <option value="pendiente">Pendiente</option>
+              <option value="cancelada">Cancelada</option>
+              <option value="completada">Completada</option>
+            </select>
+          </div>
+        </div>
+        <div class="dtable-wrap">
+          <table class="dtable" id="citasTable">
+            <thead><tr><th>Cliente</th><th>Servicio</th><th>Barbero</th><th>Fecha</th><th>Hora</th><th>Estado</th><th>Acciones</th></tr></thead>
+            <tbody id="citasTbody">
+              <tr><td colspan="7" class="text-center text-muted py-3">Cargando citas…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════ BARBEROS ═══════════ -->
+    <section class="content-section" id="sec-barberos">
+      <div class="d-flex justify-content-between align-items-end mb-3 flex-wrap gap-2">
+        <div>
+          <div class="text-muted" style="font-size:.85rem" id="barberosCount">Cargando…</div>
+          <div class="rf-tag">RF-46 · RF-47 · RF-48 · RF-51</div>
+        </div>
+        <button class="btn-gold" onclick="abrirBarbero()" title="Registrar barbero (RF-46, RN-46)"><i class="bi bi-plus-lg"></i> Nuevo barbero</button>
+      </div>
+      <div class="row g-3" id="barberosGrid">
+        <div class="col-12 text-center text-muted py-4">Cargando barberos…</div>
+      </div>
+    </section>
+
+    <!-- ═══════════ SERVICIOS ═══════════ -->
+    <section class="content-section" id="sec-servicios">
+      <div class="d-flex justify-content-between align-items-end mb-3 flex-wrap gap-2">
+        <div>
+          <div class="text-muted" style="font-size:.85rem" id="serviciosCount">Cargando…</div>
+          <div class="rf-tag">RF-33 · RF-34 · RF-35 · RF-36 · RF-40</div>
+        </div>
+        <button class="btn-gold" onclick="abrirServicio()" title="Registrar servicio (RF-33, RN-33)"><i class="bi bi-plus-lg"></i> Nuevo servicio</button>
+      </div>
+      <div id="serviciosList">
+        <div class="text-center text-muted py-4">Cargando servicios…</div>
+      </div>
+      <button class="btn-outline-gold btn-sm-gold mt-1" title="Exportar catálogo (RF-40, RN-40)" onclick="exportarCatalogo()"><i class="bi bi-download"></i> Exportar catálogo</button>
+    </section>
+
+    <!-- ═══════════ CLIENTES ═══════════ -->
+    <section class="content-section" id="sec-clientes">
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <h5>Clientes registrados</h5>
+            <div class="rf-tag">RF-42 · RF-49 · RF-53 · RF-55</div>
+          </div>
+          <div class="d-flex gap-2 flex-wrap">
+            <div class="search-input-wrap"><input type="text" placeholder="Buscar cliente..." id="clientesSearch"></div>
+            <button class="btn-gold" onclick="abrirCliente()" title="Registrar cliente (RF-42, RN-42)"><i class="bi bi-plus-lg"></i> Nuevo cliente</button>
+          </div>
+        </div>
+        <div class="rf-note">Solo se eliminarán clientes sin citas activas ni suscripciones vigentes (RN-53). Toda eliminación queda registrada en un historial (RF-55).</div>
+        <div class="dtable-wrap">
+          <table class="dtable" id="clientesTable">
+            <thead><tr><th>Nombre</th><th>Teléfono</th><th>Correo</th><th>Citas totales</th><th>Cliente desde</th><th>Estado</th><th>Acciones</th></tr></thead>
+            <tbody id="clientesTbody">
+              <tr><td colspan="7" class="text-center text-muted py-3">Cargando clientes…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════ SUSCRIPCIONES ═══════════ -->
+    <section class="content-section" id="sec-suscripciones">
+      <div class="d-flex justify-content-between align-items-end mb-3 flex-wrap gap-2">
+        <div class="rf-tag">RF-68 · RF-69 · RF-70 · RF-73 · RF-77</div>
+        <div class="d-flex gap-2 flex-wrap">
+          <button class="btn-outline-gold" onclick="abrirAsignarPlan()" title="Asignar un plan a un cliente (RF-70)"><i class="bi bi-person-plus"></i> Asignar plan</button>
+          <button class="btn-gold" onclick="abrirPlan()" title="Crear plan de suscripción (RF-68)"><i class="bi bi-plus-lg"></i> Nuevo plan</button>
+        </div>
+      </div>
+      <div class="row g-3 mb-3" id="planesResumen"><div class="col-12 text-center text-muted py-3">Cargando planes…</div></div>
+      <div class="panel">
+        <div class="panel-head"><h5>Suscripciones</h5></div>
+        <div class="rf-note">Un cliente no puede tener dos suscripciones vigentes a la vez (RN-70). Las vencidas se marcan solas.</div>
+        <div class="dtable-wrap">
+          <table class="dtable">
+            <thead><tr><th>Cliente</th><th>Plan</th><th>Inicio</th><th>Vence</th><th>Estado</th><th>Pago</th><th>Acciones</th></tr></thead>
+            <tbody id="suscripcionesTbody"><tr><td colspan="7" class="text-center text-muted py-3">Cargando…</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════ PAGOS ═══════════ -->
+    <section class="content-section" id="sec-pagos">
+      <div class="panel">
+        <div class="panel-head">
+          <div><h5>Historial de pagos</h5><div class="rf-tag">RF-56 · RF-64 · RF-67</div></div>
+          <div class="d-flex gap-2 flex-wrap">
+            <select class="form-select" style="width:auto" id="pagosFiltro">
+              <option value="todos">Todos los estados</option>
+              <option value="exitoso">Exitoso</option><option value="pendiente">Pendiente</option>
+              <option value="fallido">Fallido</option><option value="reembolsado">Reembolsado</option>
+            </select>
+            <button class="btn-outline-gold btn-sm-gold" onclick="exportarPagos()" title="Descargar el historial en CSV (RF-64)"><i class="bi bi-download"></i> Exportar</button>
+          </div>
+        </div>
+        <div class="dtable-wrap">
+          <table class="dtable">
+            <thead><tr><th>Fecha</th><th>Concepto</th><th>Cliente</th><th>Monto</th><th>Método</th><th>Estado</th><th></th></tr></thead>
+            <tbody id="pagosTbody"><tr><td colspan="7" class="text-center text-muted py-3">Cargando pagos…</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════ RESEÑAS ═══════════ -->
+    <section class="content-section" id="sec-resenas">
+      <div class="rf-note">Solo se muestran reseñas verificadas de citas completadas (RN-83). La matriz no define un RF específico para que el administrador modere reseñas — por eso no hay botón de "Responder" (esa función no está construida).</div>
+      <div class="row g-3" id="listaResenasAdmin">
+        <div class="col-12 text-center text-muted py-4">Cargando reseñas…</div>
+      </div>
+    </section>
+
+    <!-- ═══════════ REPORTES ═══════════ -->
+    <section class="content-section" id="sec-reportes">
+      <div class="rf-note">Cifras reales del mes en curso. Los ingresos suman las citas <b>completadas</b> y las suscripciones pagadas.</div>
+      <div class="row g-3 mb-3">
+        <div class="col-6 col-lg-3"><div class="stat-card"><div class="lbl">Ingresos del mes</div><div class="val" id="repIngresos">—</div><div class="delta neutral" id="repIngresosDetalle">citas + suscripciones</div></div></div>
+        <div class="col-6 col-lg-3"><div class="stat-card"><div class="lbl">Citas completadas</div><div class="val" id="repCitas">—</div><div class="delta neutral" id="repTicket">ticket promedio</div></div></div>
+        <div class="col-6 col-lg-3"><div class="stat-card"><div class="lbl">Tasa de cancelación</div><div class="val" id="repCancel">—</div><div class="delta neutral">este mes</div></div></div>
+        <div class="col-6 col-lg-3"><div class="stat-card"><div class="lbl">Nuevas suscripciones</div><div class="val" id="repSubs">—</div><div class="delta neutral">este mes</div></div></div>
+      </div>
+      <div class="panel">
+        <div class="panel-head">
+          <div><h5>Ingresos por semana (citas)</h5><div class="rf-tag">RF-64 · RN-64</div></div>
+          <button class="btn-outline-gold btn-sm-gold" title="Exportar historial de pagos (RF-64)" onclick="exportarPagos()"><i class="bi bi-download"></i> Exportar pagos</button>
+        </div>
+        <div class="bar-chart" id="repSemanas"></div>
+      </div>
+    </section>
+
+    <!-- ═══════════ CONFIGURACIÓN ═══════════ -->
+    <section class="content-section" id="sec-configuracion">
+      <div class="rf-note">Estos datos alimentan el nombre del negocio, la dirección y el horario que ven tus clientes y tu equipo — así este mismo sistema se puede reutilizar para otra barbería solo cambiando estos valores, sin tocar código.</div>
+      <div class="row g-3">
+        <div class="col-lg-6">
+          <div class="panel h-100">
+            <div class="panel-head">
+              <h5>Datos del negocio</h5>
+            </div>
+            <form id="formDatosNegocio">
+              <div class="mb-3"><label class="form-label">Nombre del negocio</label><input class="form-control" id="cfgNombreNegocio" placeholder="Cargando…"></div>
+              <div class="mb-3"><label class="form-label">Dirección</label><input class="form-control" id="cfgDireccion" placeholder="Cargando…"></div>
+              <div class="mb-3"><label class="form-label">Teléfono de contacto</label><input class="form-control" id="cfgTelefono" placeholder="Cargando…"></div>
+              <button class="btn-gold" type="submit">Guardar cambios</button>
+            </form>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="panel h-100">
+            <div class="panel-head">
+              <div>
+                <h5>Horario de atención</h5>
+                <div class="rf-tag">RNF-19 · RNF-22</div>
+              </div>
+            </div>
+            <form id="formHorarioNegocio">
+              <div class="mb-3"><label class="form-label">Lunes a viernes</label><input class="form-control" id="cfgHorarioLunVie" placeholder="Ej: 9:00 a.m. - 7:00 p.m."></div>
+              <div class="mb-3"><label class="form-label">Sábado</label><input class="form-control" id="cfgHorarioSabado" placeholder="Ej: 9:00 a.m. - 5:00 p.m."></div>
+              <div class="mb-3"><label class="form-label">Domingo</label><input class="form-control" id="cfgHorarioDomingo" placeholder="Ej: Cerrado"></div>
+              <button class="btn-gold" type="submit">Guardar cambios</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════ MI PERFIL ═══════════ -->
+    <section class="content-section" id="sec-perfil">
+      <div class="row g-3">
+        <div class="col-lg-6">
+          <div class="panel h-100">
+            <div class="panel-head"><h5>Mis datos</h5></div>
+            <form id="formPerfilAdmin">
+              <div class="mb-3"><label class="form-label">Nombre completo</label><input class="form-control" id="perfilNombre" required></div>
+              <div class="mb-3"><label class="form-label">Correo</label><input type="email" class="form-control" id="perfilCorreo" required></div>
+              <div class="mb-3"><label class="form-label">Teléfono</label><input class="form-control" id="perfilTelefono"></div>
+              <button class="btn-gold" type="submit">Guardar cambios</button>
+            </form>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="panel h-100">
+            <div class="panel-head"><h5>Cambiar contraseña</h5></div>
+            <form id="formPasswordAdmin">
+              <div class="mb-3"><label class="form-label">Contraseña actual</label><input type="password" class="form-control" id="passwordActual"></div>
+              <div class="mb-3"><label class="form-label">Nueva contraseña</label><input type="password" class="form-control" id="passwordNueva" placeholder="Mínimo 6 caracteres"></div>
+              <button class="btn-outline-gold" type="submit">Cambiar contraseña</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<!-- MODAL NUEVO BARBERO -->
+<div class="modal fade" id="barberoModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header"><h5 class="modal-title" id="barberoModalTitulo">Nuevo barbero</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
+      <form id="formBarbero">
+        <div class="modal-body">
+          <input type="hidden" id="barberoId">
+          <div class="mb-3"><label class="form-label">Nombre completo</label><input class="form-control" id="barberoNombre" placeholder="Ej: Juan Pérez" required></div>
+          <div class="mb-3"><label class="form-label">Correo</label><input type="email" class="form-control" id="barberoCorreo" placeholder="juan@barberag.com" required></div>
+          <div class="mb-3"><label class="form-label">Teléfono</label><input class="form-control" id="barberoTelefono" placeholder="300 000 0000"></div>
+          <div class="mb-3"><label class="form-label">Especialidad</label><input class="form-control" id="barberoEspecialidad" placeholder="Ej: Degradados, barba"></div>
+          <div class="mb-3" id="barberoContrasenaWrap"><label class="form-label">Contraseña inicial</label><input type="password" class="form-control" id="barberoContrasena" placeholder="Mínimo 6 caracteres" required></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-outline-gold" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn-gold">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL NUEVO SERVICIO -->
+<div class="modal fade" id="servicioModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header"><h5 class="modal-title" id="servicioModalTitulo">Nuevo servicio</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
+      <form id="formServicio">
+        <div class="modal-body">
+          <input type="hidden" id="servicioId">
+          <div class="mb-3"><label class="form-label">Nombre del servicio</label><input class="form-control" id="servicioNombre" placeholder="Ej: Corte + Diseño" required></div>
+          <div class="mb-3"><label class="form-label">Descripción</label><input class="form-control" id="servicioDescripcion" placeholder="Breve descripción"></div>
+          <div class="row">
+            <div class="col-6 mb-3"><label class="form-label">Precio</label><input type="number" class="form-control" id="servicioPrecio" placeholder="28000" required></div>
+            <div class="col-6 mb-3"><label class="form-label">Duración (min)</label><input type="number" class="form-control" id="servicioDuracion" placeholder="30" required></div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-outline-gold" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn-gold">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL NUEVO CLIENTE -->
+<div class="modal fade" id="clienteModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header"><h5 class="modal-title" id="clienteModalTitulo">Nuevo cliente</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
+      <form id="formCliente">
+        <div class="modal-body">
+          <input type="hidden" id="clienteId">
+          <div class="mb-3"><label class="form-label">Nombre completo</label><input class="form-control" id="clienteNombre" placeholder="Ej: Laura Gómez" required></div>
+          <div class="mb-3"><label class="form-label">Correo</label><input type="email" class="form-control" id="clienteCorreo" placeholder="laura@correo.com" required></div>
+          <div class="mb-3"><label class="form-label">Teléfono</label><input class="form-control" id="clienteTelefono" placeholder="300 000 0000"></div>
+          <div id="clienteNuevoWrap"><div class="mb-3"><label class="form-label">Contraseña inicial</label><input type="password" class="form-control" id="clienteContrasena" placeholder="Mínimo 6 caracteres" required></div>
+          <div class="form-check mb-2">
+            <input class="form-check-input" type="checkbox" id="clienteConsentimiento" required>
+            <label class="form-check-label" for="clienteConsentimiento" style="font-size:.82rem">
+              El cliente autoriza el tratamiento de sus datos personales conforme a la
+              <a href="legal.html#politica" target="_blank" style="color:var(--gold)">Política de Tratamiento de Datos</a>
+              y los <a href="legal.html#terminos" target="_blank" style="color:var(--gold)">Términos y Condiciones</a> (Ley 1581 de 2012).
+            </label>
+          </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-outline-gold" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn-gold">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL CANCELAR CITA (motivo obligatorio, RN-17) -->
+<div class="modal fade" id="cancelarCitaModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header"><h5 class="modal-title">Cancelar cita</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
+      <form id="formCancelarCita">
+        <div class="modal-body">
+          <input type="hidden" id="cancelarCitaId">
+          <div class="mb-3"><label class="form-label">Motivo de la cancelación</label><textarea class="form-control" id="cancelarCitaMotivo" rows="3" placeholder="Ej: el cliente no puede asistir" required></textarea></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-outline-gold" data-bs-dismiss="modal">Volver</button>
+          <button type="submit" class="btn-gold">Confirmar cancelación</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL COBRAR CITA (Wompi: Nequi, PSE/Bancolombia, tarjetas) -->
+<div class="modal fade" id="cobroModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header"><h5 class="modal-title">Cobrar cita</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
+      <div class="modal-body">
+        <div class="mb-3" id="cobroCitaInfo" style="font-weight:600"></div>
+        <div id="cobroWidgetContainer" class="text-center"></div>
+        <div id="cobroEstadoBox" class="mt-2"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-outline-gold" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL NUEVA CITA (RF-01: el admin agenda a nombre de un cliente) -->
+<div class="modal fade" id="citaModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header"><h5 class="modal-title" id="citaModalTitulo">Nueva cita</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
+      <form id="formCita">
+        <div class="modal-body">
+          <input type="hidden" id="citaId">
+          <div class="mb-3"><label class="form-label">Cliente</label><select class="form-select" id="citaCliente" required></select></div>
+          <div class="row">
+            <div class="col-6 mb-3"><label class="form-label">Servicio</label><select class="form-select" id="citaServicio" required></select></div>
+            <div class="col-6 mb-3"><label class="form-label">Barbero</label><select class="form-select" id="citaBarbero" required></select></div>
+          </div>
+          <div class="row">
+            <div class="col-6 mb-3"><label class="form-label">Fecha</label><input type="date" class="form-control" id="citaFecha" required></div>
+            <div class="col-6 mb-3"><label class="form-label">Hora</label><select class="form-select" id="citaHora" required><option value="">Elige servicio, barbero y fecha</option></select></div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-outline-gold" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn-gold" id="citaGuardarBtn">Agendar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL PLAN (crear / editar, RF-68) -->
+<div class="modal fade" id="planModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header"><h5 class="modal-title" id="planModalTitulo">Nuevo plan</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
+      <form id="formPlan">
+        <div class="modal-body">
+          <input type="hidden" id="planId">
+          <div class="mb-3"><label class="form-label">Nombre</label><input class="form-control" id="planNombre" required></div>
+          <div class="mb-3"><label class="form-label">Descripción</label><input class="form-control" id="planDescripcion"></div>
+          <div class="row">
+            <div class="col-6 mb-3"><label class="form-label">Precio</label><input type="number" class="form-control" id="planPrecio" required></div>
+            <div class="col-6 mb-3"><label class="form-label">Duración (días)</label><input type="number" class="form-control" id="planDuracion" value="30" required></div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-outline-gold" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn-gold">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL ASIGNAR PLAN (RF-70) -->
+<div class="modal fade" id="asignarModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header"><h5 class="modal-title">Asignar plan a un cliente</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
+      <form id="formAsignar">
+        <div class="modal-body">
+          <div class="mb-3"><label class="form-label">Cliente</label><select class="form-select" id="asignarCliente" required></select></div>
+          <div class="mb-3"><label class="form-label">Plan</label><select class="form-select" id="asignarPlan" required></select></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-outline-gold" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn-gold">Asignar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast-wrap"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/api.js"></script>
+<script>
+  // ─── PANEL: sesión, navegación, sidebar móvil y despacho de secciones ───
+  const { usuarioActivo, goTo } = inicializarPanel('administrador', {
+    dashboard: cargarDashboard, citas: cargarCitas, barberos: cargarBarberos,
+    servicios: cargarServicios, clientes: cargarClientes, suscripciones: cargarSuscripciones, pagos: cargarPagos,
+    reportes: cargarReportes, configuracion: cargarConfiguracionForm, resenas: cargarResenasAdmin, perfil: cargarPerfilAdmin,
+  }, 'dashboard');
+
+  // ═══════════════════════════════════════════════
+  // DASHBOARD
+  // ═══════════════════════════════════════════════
+  async function cargarDashboard() {
+    try {
+      const hoy = hoyLocal();
+      const [citasHoy, barberos] = await Promise.all([
+        apiFetch(`/citas?fecha=${hoy}`),
+        apiFetch('/barberos'),
+      ]);
+
+      // stats
+      document.getElementById('statCitasHoy').textContent = citasHoy.length;
+      document.getElementById('statCitasHoyDelta').textContent = `${citasHoy.filter(c => c.estado === 'confirmada').length} confirmadas`;
+
+      const ingresosHoy = citasHoy.filter(c => c.estado === 'completada').reduce((sum, c) => sum + Number(c.precio || 0), 0);
+      document.getElementById('statIngresosHoy').textContent = formatoMoneda(ingresosHoy);
+
+      const calificaciones = barberos.filter(b => b.total_resenas > 0).map(b => b.calificacion_promedio);
+      const promedio = calificaciones.length ? (calificaciones.reduce((a,b) => a+b, 0) / calificaciones.length).toFixed(1) : '—';
+      document.getElementById('statCalificacion').textContent = promedio;
+
+      // clientes nuevos esta semana (a partir de /clientes, cargado bajo demanda)
+      try {
+        const clientes = await apiFetch('/clientes');
+        const unaSemanaAtras = new Date(); unaSemanaAtras.setDate(unaSemanaAtras.getDate() - 7);
+        const nuevos = clientes.filter(c => new Date(c.creado_en) >= unaSemanaAtras).length;
+        document.getElementById('statClientesNuevos').textContent = nuevos;
+      } catch { document.getElementById('statClientesNuevos').textContent = '—'; }
+
+      // reseña más reciente
+      try {
+        const r = (await apiFetch('/resenas'))[0];
+        document.getElementById('dashResenaReciente').innerHTML = r ? `
+          <div class="mini-review"><div class="av">${inicialesDe(r.cliente_nombre)}</div><div>
+            <div style="font-weight:600;font-size:.85rem">${escapeHtml(r.cliente_nombre)} <span class="text-muted">· ${escapeHtml(r.barbero_nombre)}</span></div>
+            <div class="stars">${estrellasTexto(r.calificacion)}</div>
+            <p>${r.comentario ? escapeHtml(r.comentario) : '(sin comentario)'}</p></div></div>`
+          : '<div class="text-muted" style="font-size:.85rem">Todavía no hay reseñas.</div>';
+      } catch { document.getElementById('dashResenaReciente').innerHTML = '<div class="text-muted" style="font-size:.85rem">No se pudieron cargar las reseñas.</div>'; }
+
+      // próximas citas de hoy
+      const tbody = document.getElementById('dashProximasCitas');
+      if (!citasHoy.length) {
+        tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted py-3">No hay citas agendadas para hoy.</td></tr>`;
+      } else {
+        tbody.innerHTML = citasHoy.slice(0, 6).map(c => `
+          <tr>
+            <td>${escapeHtml(c.cliente_nombre)}</td>
+            <td>${escapeHtml(c.servicio_nombre)}</td>
+            <td>${escapeHtml(c.barbero_nombre)}</td>
+            <td>${formatoHora(c.hora_inicio)}</td>
+            <td><span class="badge-status ${c.estado}">${capitaliza(c.estado)}</span></td>
+          </tr>`).join('');
+      }
+
+      // barberos activos
+      const cont = document.getElementById('dashBarberosActivos');
+      cont.innerHTML = barberos.map(b => `
+        <div class="barber-row">
+          <div class="b-info"><div class="b-avatar">${inicialesDe(b.nombre)}</div><div class="b-name">${escapeHtml(b.nombre)}</div></div>
+          <div class="b-count">${b.citas_hoy} citas</div>
+        </div>`).join('') || '<div class="text-muted" style="font-size:.85rem">No hay barberos registrados.</div>';
+
+    } catch (err) {
+      showErrorToast(err);
+    }
+  }
+
+  // ═══════════════════════════════════════════════
+  // CITAS
+  // ═══════════════════════════════════════════════
+  let citasCache = [];
+
+  async function cargarCitas() {
+    const tbody = document.getElementById('citasTbody');
+    tbody.innerHTML = `<tr><td colspan="7" class="text-center text-muted py-3">Cargando citas…</td></tr>`;
+    try {
+      citasCache = await apiFetch('/citas');
+      renderCitas();
+    } catch (err) {
+      tbody.innerHTML = `<tr><td colspan="7" class="text-center text-muted py-3">No se pudieron cargar las citas.</td></tr>`;
+      showErrorToast(err);
+    }
+  }
+
+  function renderCitas() {
+    const estado = document.getElementById('citasFiltro').value;
+    const q = document.getElementById('citasSearch').value.toLowerCase();
+    const tbody = document.getElementById('citasTbody');
+
+    const filtradas = citasCache.filter(c =>
+      (estado === 'todas' || c.estado === estado) &&
+      c.cliente_nombre.toLowerCase().includes(q)
+    );
+
+    if (!filtradas.length) {
+      tbody.innerHTML = `<tr><td colspan="7" class="text-center text-muted py-3">No hay citas que coincidan.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = filtradas.map(c => {
+      let acciones = '';
+      if (['pendiente', 'confirmada'].includes(c.estado)) {
+        acciones += `<button class="icon-btn" title="Reprogramar cita (RF-12, RF-15)" onclick="abrirNuevaCita(${c.id_cita})"><i class="bi bi-pencil"></i></button> `;
+      }
+      if (c.estado === 'pendiente') {
+        acciones += `<button class="icon-btn" title="Confirmar cita (RF-10, RN-10)" onclick="confirmarCita(${c.id_cita})"><i class="bi bi-check-lg"></i></button> `;
+        acciones += `<button class="icon-btn danger" title="Cancelar cita (RF-17, RN-17)" onclick="abrirCancelarCita(${c.id_cita})"><i class="bi bi-x-lg"></i></button>`;
+      } else if (c.estado === 'confirmada') {
+        acciones += `<button class="icon-btn" title="Marcar como completada (RF-30)" onclick="completarCita(${c.id_cita})"><i class="bi bi-check2-all"></i></button> `;
+        acciones += `<button class="icon-btn danger" title="Cancelar cita (RF-17, RN-17)" onclick="abrirCancelarCita(${c.id_cita})"><i class="bi bi-x-lg"></i></button> `;
+        acciones += c.pagada ? `<span class="badge-status exitoso">Pagada</span>` : `<button class="icon-btn" title="Cobrar (RF-56)" onclick="abrirCobro(${c.id_cita})"><i class="bi bi-credit-card"></i></button>`;
+      } else if (c.estado === 'cancelada') {
+        acciones += `<span class="text-muted" style="font-size:.78rem" title="${escapeHtml(c.motivo_cancelacion || '')}">Motivo: ${escapeHtml((c.motivo_cancelacion || '—').slice(0, 30))}</span>`;
+      } else {
+        acciones += `<span class="text-muted" style="font-size:.78rem">${formatoMoneda(c.precio || 0)}</span> `;
+        acciones += c.pagada ? `<span class="badge-status exitoso">Pagada</span>` : `<button class="icon-btn" title="Cobrar (RF-56)" onclick="abrirCobro(${c.id_cita})"><i class="bi bi-credit-card"></i></button>`;
+      }
+      return `
+        <tr>
+          <td>${escapeHtml(c.cliente_nombre)}</td>
+          <td>${escapeHtml(c.servicio_nombre)}</td>
+          <td>${escapeHtml(c.barbero_nombre)}</td>
+          <td>${formatoFecha(c.fecha)}</td>
+          <td>${formatoHora(c.hora_inicio)}</td>
+          <td><span class="badge-status ${c.estado}">${capitaliza(c.estado)}</span></td>
+          <td>${acciones}</td>
+        </tr>`;
+    }).join('');
+  }
+
+  document.getElementById('citasFiltro').addEventListener('change', renderCitas);
+  document.getElementById('citasSearch').addEventListener('input', renderCitas);
+
+  async function confirmarCita(id) {
+    try {
+      await apiFetch(`/citas/${id}/estado`, { method: 'PUT', body: JSON.stringify({ estado: 'confirmada' }) });
+      showToast('Cita confirmada', 'El estado de la cita quedó actualizado.');
+      cargarCitas();
+    } catch (err) { showErrorToast(err); }
+  }
+
+  async function completarCita(id) {
+    try {
+      await apiFetch(`/citas/${id}/estado`, { method: 'PUT', body: JSON.stringify({ estado: 'completada' }) });
+      showToast('Cita completada', 'Se registró el servicio en el historial. RF-30');
+      cargarCitas();
+    } catch (err) { showErrorToast(err); }
+  }
+
+  // ═══════════════════════════════════════════════
+  // COBRO (Wompi: Nequi, PSE/Bancolombia, tarjetas)
+  // ═══════════════════════════════════════════════
+  async function abrirCobro(idCita) {
+    const cita = citasCache.find(c => c.id_cita === idCita);
+    document.getElementById('cobroCitaInfo').textContent = `${cita.servicio_nombre} — ${formatoMoneda(cita.precio)}`;
+    document.getElementById('cobroWidgetContainer').innerHTML = '<div class="text-center text-muted py-3">Generando cobro…</div>';
+    document.getElementById('cobroEstadoBox').innerHTML = '';
+    new bootstrap.Modal(document.getElementById('cobroModal')).show();
+
+    try {
+      const data = await apiFetch('/pagos', { method: 'POST', body: JSON.stringify({ id_cita: idCita }) });
+
+      if (data.widget) {
+        // Proveedor real (Wompi): inyecta el botón oficial del Widget en el modal.
+        const cont = document.getElementById('cobroWidgetContainer');
+        cont.innerHTML = '<form id="wompiForm"></form>';
+        const script = document.createElement('script');
+        script.src = 'https://checkout.wompi.co/widget.js';
+        script.setAttribute('data-render', 'button');
+        script.setAttribute('data-public-key', data.widget.publicKey);
+        script.setAttribute('data-currency', data.widget.currency);
+        script.setAttribute('data-amount-in-cents', data.widget.amountInCents);
+        script.setAttribute('data-reference', data.widget.reference);
+        script.setAttribute('data-signature:integrity', data.widget.signature);
+        script.setAttribute('data-redirect-url', data.widget.redirectUrl);
+        document.getElementById('wompiForm').appendChild(script);
+        document.getElementById('cobroEstadoBox').innerHTML = '<div class="rf-note" style="margin:0">El cliente completa el pago (Nequi, PSE/Bancolombia o tarjeta) en la ventana de Wompi. El estado se actualiza solo cuando Wompi confirme.</div>';
+        iniciarPollingCobro(idCita);
+      } else {
+        // Proveedor simulado: ya quedó resuelto de inmediato.
+        document.getElementById('cobroWidgetContainer').innerHTML = `<div class="text-center py-3"><i class="bi bi-check-circle" style="font-size:2rem;color:#4caf6d"></i><div class="mt-2">Pago registrado (modo simulado): <b>${data.estado}</b></div></div>`;
+        cargarCitas();
+      }
+    } catch (err) {
+      document.getElementById('cobroWidgetContainer').innerHTML = `<div class="text-center text-muted py-3">No se pudo generar el cobro.</div>`;
+      showErrorToast(err);
+    }
+  }
+
+  let cobroPollingTimer = null;
+  function iniciarPollingCobro(idCita) {
+    clearInterval(cobroPollingTimer);
+    let intentos = 0;
+    cobroPollingTimer = setInterval(async () => {
+      intentos++;
+      try {
+        const pagos = await apiFetch(`/pagos?id_cita=${idCita}`);
+        const ultimo = pagos[0];
+        if (ultimo && ultimo.estado !== 'pendiente') {
+          clearInterval(cobroPollingTimer);
+          const ok = ultimo.estado === 'exitoso';
+          document.getElementById('cobroEstadoBox').innerHTML = `<div class="rf-note" style="margin:0;color:${ok ? '#4caf6d' : '#e05252'}">Pago ${ultimo.estado}${ultimo.metodo_pago_wompi ? ' vía ' + ultimo.metodo_pago_wompi : ''}.</div>`;
+          showToast(ok ? 'Pago confirmado' : 'Pago no exitoso', `Estado: ${ultimo.estado}`);
+          cargarCitas();
+        }
+      } catch { /* red intermitente durante el polling: se reintenta en el siguiente ciclo */ }
+      if (intentos >= 40) clearInterval(cobroPollingTimer); // ~2 minutos máximo
+    }, 3000);
+  }
+
+  function abrirCancelarCita(id) {
+    document.getElementById('cancelarCitaId').value = id;
+    document.getElementById('cancelarCitaMotivo').value = '';
+    new bootstrap.Modal(document.getElementById('cancelarCitaModal')).show();
+  }
+
+  document.getElementById('formCancelarCita').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const id = document.getElementById('cancelarCitaId').value;
+    const motivo = document.getElementById('cancelarCitaMotivo').value.trim();
+    try {
+      await apiFetch(`/citas/${id}/estado`, { method: 'PUT', body: JSON.stringify({ estado: 'cancelada', motivo_cancelacion: motivo }) });
+      bootstrap.Modal.getInstance(document.getElementById('cancelarCitaModal')).hide();
+      showToast('Cita cancelada', 'La cita quedó cancelada y el motivo registrado.');
+      cargarCitas();
+    } catch (err) { showErrorToast(err); }
+  });
+
+  // ═══════════════════════════════════════════════
+  // BARBEROS
+  // ═══════════════════════════════════════════════
+  async function cargarBarberos() {
+    const grid = document.getElementById('barberosGrid');
+    try {
+      const barberos = barberosCache = await apiFetch('/barberos');
+      document.getElementById('barberosCount').textContent = `${barberos.length} barbero${barberos.length === 1 ? '' : 's'} registrado${barberos.length === 1 ? '' : 's'}`;
+
+      grid.innerHTML = barberos.map(b => `
+        <div class="col-6 col-md-4 col-lg-3">
+          <div class="team-card">
+            <div class="card-actions">
+              <button class="icon-btn" title="Editar barbero (RF-49)" onclick="abrirBarbero(${b.id_usuario})"><i class="bi bi-pencil"></i></button>
+              <button class="icon-btn" title="${b.disponible ? 'Desactivar disponibilidad' : 'Activar disponibilidad'} (RF-51)" onclick="toggleDisponibilidadBarbero(${b.id_usuario}, ${b.disponible ? 0 : 1})">
+                <i class="bi bi-${b.disponible ? 'toggle-on' : 'toggle-off'}"></i>
+              </button>
+              <button class="icon-btn ${b.estado === 'activo' ? 'danger' : ''}" title="${b.estado === 'activo' ? 'Desactivar cuenta' : 'Reactivar cuenta'}" onclick="toggleEstadoBarbero(${b.id_usuario}, '${b.estado === 'activo' ? 'inactivo' : 'activo'}')"><i class="bi bi-${b.estado === 'activo' ? 'person-x' : 'person-check'}"></i></button>
+            </div>
+            <div class="avatar">${inicialesDe(b.nombre)}</div>
+            <h5>${escapeHtml(b.nombre)}</h5>
+            <div class="role">${escapeHtml(b.especialidad || 'Barbero')}</div>
+            <div class="stars">${b.total_resenas ? '★ ' + b.calificacion_promedio + ' (' + b.total_resenas + ')' : 'Sin reseñas'}</div>
+            <div class="tstats"><div><b>${b.citas_hoy}</b>citas hoy</div><div><b>${b.total_clientes}</b>clientes</div></div>
+            ${b.estado !== 'activo' ? '<div class="rf-tag" style="color:#f28b8b">Cuenta inactiva</div>' : !b.disponible ? '<div class="rf-tag" style="color:#e6a83c">No disponible</div>' : ''}
+          </div>
+        </div>`).join('') || '<div class="col-12 text-center text-muted py-4">No hay barberos registrados todavía.</div>';
+    } catch (err) {
+      grid.innerHTML = '<div class="col-12 text-center text-muted py-4">No se pudieron cargar los barberos.</div>';
+      showErrorToast(err);
+    }
+  }
+
+  let barberosCache = [];
+  async function toggleEstadoBarbero(id, estado) {
+    if (estado === 'inactivo' && !confirm('¿Desactivar la cuenta de este barbero? No podrá iniciar sesión ni recibir citas.')) return;
+    try {
+      await apiFetch(`/barberos/${id}`, { method: 'PUT', body: JSON.stringify({ estado }) });
+      showToast('Cuenta actualizada', estado === 'activo' ? 'El barbero fue reactivado.' : 'El barbero fue desactivado.');
+      cargarBarberos();
+    } catch (err) { showErrorToast(err); }
+  }
+
+  /** Abre el formulario de barbero: vacío para crear, relleno si recibe un id (editar) */
+  function abrirBarbero(id) {
+    const b = id ? barberosCache.find(x => x.id_usuario === id) : null;
+    document.getElementById('barberoModalTitulo').textContent = b ? 'Editar barbero' : 'Nuevo barbero';
+    document.getElementById('barberoId').value = b ? b.id_usuario : '';
+    document.getElementById('barberoNombre').value = b ? b.nombre : '';
+    document.getElementById('barberoCorreo').value = b ? b.correo : '';
+    document.getElementById('barberoCorreo').disabled = !!b;
+    document.getElementById('barberoTelefono').value = b ? (b.telefono || '') : '';
+    document.getElementById('barberoEspecialidad').value = b ? (b.especialidad || '') : '';
+    document.getElementById('barberoContrasena').value = '';
+    document.getElementById('barberoContrasena').required = !b;
+    document.getElementById('barberoContrasenaWrap').style.display = b ? 'none' : '';
+    bootstrap.Modal.getOrCreateInstance(document.getElementById('barberoModal')).show();
+  }
+
+  async function toggleDisponibilidadBarbero(id, nuevoValor) {
+    try {
+      await apiFetch(`/barberos/${id}`, { method: 'PUT', body: JSON.stringify({ disponible: nuevoValor }) });
+      showToast('Disponibilidad actualizada', 'RF-51');
+      cargarBarberos();
+    } catch (err) { showErrorToast(err); }
+  }
+
+  document.getElementById('formBarbero').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const id = document.getElementById('barberoId').value;
+    const datos = {
+      nombre: document.getElementById('barberoNombre').value.trim(),
+      telefono: document.getElementById('barberoTelefono').value.trim(),
+      especialidad: document.getElementById('barberoEspecialidad').value.trim(),
+    };
+    try {
+      if (id) await apiFetch(`/barberos/${id}`, { method: 'PUT', body: JSON.stringify(datos) });
+      else await apiFetch('/barberos', { method: 'POST', body: JSON.stringify({ ...datos, correo: document.getElementById('barberoCorreo').value.trim(), contrasena: document.getElementById('barberoContrasena').value }) });
+      bootstrap.Modal.getInstance(document.getElementById('barberoModal')).hide();
+      showToast(id ? 'Barbero actualizado' : 'Barbero agregado', id ? 'RF-49' : 'RF-46 · RF-47');
+      cargarBarberos();
+    } catch (err) { showErrorToast(err); }
+  });
+
+  // ═══════════════════════════════════════════════
+  // SERVICIOS
+  // ═══════════════════════════════════════════════
+  async function cargarServicios() {
+    const lista = document.getElementById('serviciosList');
+    try {
+      const servicios = serviciosCache = await apiFetch('/servicios');
+      document.getElementById('serviciosCount').textContent = `${servicios.length} servicio${servicios.length === 1 ? '' : 's'} en el catálogo`;
+
+      lista.innerHTML = servicios.map(s => `
+        <div class="svc-row">
+          <div>
+            <div class="svc-name">${escapeHtml(s.nombre)} ${s.estado === 'inactivo' ? '<span class="badge-status inactivo">Inactivo</span>' : ''}</div>
+            <div class="svc-meta">${s.duracion_min} min ${s.descripcion ? '· ' + escapeHtml(s.descripcion) : ''}</div>
+          </div>
+          <div class="d-flex align-items-center gap-3">
+            <div class="svc-price">${formatoMoneda(s.precio)}</div>
+            <button class="icon-btn" title="Editar servicio (RF-34)" onclick="abrirServicio(${s.id_servicio})"><i class="bi bi-pencil"></i></button>
+            <button class="icon-btn" title="${s.estado === 'activo' ? 'Desactivar' : 'Activar'} servicio (RF-35, RN-35)" onclick="toggleEstadoServicio(${s.id_servicio}, '${s.estado === 'activo' ? 'inactivo' : 'activo'}')"><i class="bi bi-${s.estado === 'activo' ? 'eye-slash' : 'eye'}"></i></button>
+            <button class="icon-btn danger" title="Eliminar servicio (RF-36, RN-36)" onclick="eliminarServicio(${s.id_servicio})"><i class="bi bi-trash"></i></button>
+          </div>
+        </div>`).join('') || '<div class="text-center text-muted py-4">No hay servicios en el catálogo todavía.</div>';
+    } catch (err) {
+      lista.innerHTML = '<div class="text-center text-muted py-4">No se pudieron cargar los servicios.</div>';
+      showErrorToast(err);
+    }
+  }
+
+  let serviciosCache = [];
+  function abrirServicio(id) {
+    const sv = id ? serviciosCache.find(x => x.id_servicio === id) : null;
+    document.getElementById('servicioModalTitulo').textContent = sv ? 'Editar servicio' : 'Nuevo servicio';
+    document.getElementById('servicioId').value = sv ? sv.id_servicio : '';
+    document.getElementById('servicioNombre').value = sv ? sv.nombre : '';
+    document.getElementById('servicioDescripcion').value = sv ? (sv.descripcion || '') : '';
+    document.getElementById('servicioPrecio').value = sv ? sv.precio : '';
+    document.getElementById('servicioDuracion').value = sv ? sv.duracion_min : '';
+    bootstrap.Modal.getOrCreateInstance(document.getElementById('servicioModal')).show();
+  }
+
+  function exportarCatalogo() {
+    descargarCSV('catalogo-servicios.csv', [['Servicio', 'Descripción', 'Precio', 'Duración (min)', 'Estado'],
+      ...serviciosCache.map(s => [s.nombre, s.descripcion, s.precio, s.duracion_min, s.estado])]);
+    showToast('Catálogo exportado', 'Se descargó el archivo catalogo-servicios.csv. RF-40');
+  }
+
+  async function toggleEstadoServicio(id, nuevoEstado) {
+    try {
+      await apiFetch(`/servicios/${id}/estado`, { method: 'PATCH', body: JSON.stringify({ estado: nuevoEstado }) });
+      showToast('Servicio actualizado', `RF-35`);
+      cargarServicios();
+    } catch (err) { showErrorToast(err); }
+  }
+
+  async function eliminarServicio(id) {
+    if (!confirm('¿Eliminar este servicio del catálogo? Esta acción no se puede deshacer.')) return;
+    try {
+      await apiFetch(`/servicios/${id}`, { method: 'DELETE' });
+      showToast('Servicio eliminado', 'RF-36');
+      cargarServicios();
+    } catch (err) { showErrorToast(err); }
+  }
+
+  document.getElementById('formServicio').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const id = document.getElementById('servicioId').value;
+    const datos = {
+      nombre: document.getElementById('servicioNombre').value.trim(),
+      descripcion: document.getElementById('servicioDescripcion').value.trim(),
+      precio: Number(document.getElementById('servicioPrecio').value),
+      duracion_min: Number(document.getElementById('servicioDuracion').value),
+    };
+    try {
+      await apiFetch(id ? `/servicios/${id}` : '/servicios', { method: id ? 'PUT' : 'POST', body: JSON.stringify(datos) });
+      bootstrap.Modal.getInstance(document.getElementById('servicioModal')).hide();
+      showToast(id ? 'Servicio actualizado' : 'Servicio creado', id ? 'RF-34' : 'Ya está disponible en el catálogo. RF-33');
+      cargarServicios();
+    } catch (err) { showErrorToast(err); }
+  });
+
+  // ═══════════════════════════════════════════════
+  // CLIENTES
+  // ═══════════════════════════════════════════════
+  let clientesCache = [];
+
+  async function cargarClientes() {
+    const tbody = document.getElementById('clientesTbody');
+    try {
+      clientesCache = await apiFetch('/clientes');
+      renderClientes();
+    } catch (err) {
+      tbody.innerHTML = `<tr><td colspan="7" class="text-center text-muted py-3">No se pudieron cargar los clientes.</td></tr>`;
+      showErrorToast(err);
+    }
+  }
+
+  function renderClientes() {
+    const q = document.getElementById('clientesSearch').value.toLowerCase();
+    const tbody = document.getElementById('clientesTbody');
+    const filtrados = clientesCache.filter(c => c.nombre.toLowerCase().includes(q));
+
+    if (!filtrados.length) {
+      tbody.innerHTML = `<tr><td colspan="7" class="text-center text-muted py-3">No hay clientes que coincidan.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = filtrados.map(c => `
+      <tr>
+        <td>${escapeHtml(c.nombre)}</td>
+        <td>${escapeHtml(c.telefono || '—')}</td>
+        <td>${escapeHtml(c.correo)}</td>
+        <td>${c.citas_totales}</td>
+        <td>${new Date(c.creado_en).toLocaleDateString('es-CO', { year: 'numeric', month: 'short' })}</td>
+        <td><span class="badge-status ${c.estado}">${capitaliza(c.estado)}</span></td>
+        <td>
+          <button class="icon-btn" title="Editar cliente (RF-49)" onclick="abrirCliente(${c.id_usuario})"><i class="bi bi-pencil"></i></button>
+          <button class="icon-btn" title="${c.estado === 'activo' ? 'Desactivar cuenta' : 'Reactivar cuenta'} (RF-49)" onclick="toggleEstadoCliente(${c.id_usuario}, '${c.estado === 'activo' ? 'inactivo' : 'activo'}')"><i class="bi bi-${c.estado === 'activo' ? 'person-x' : 'person-check'}"></i></button>
+          <button class="icon-btn danger" title="Eliminar cliente (RF-53, RN-53)" onclick="eliminarCliente(${c.id_usuario})"><i class="bi bi-trash"></i></button>
+        </td>
+      </tr>`).join('');
+  }
+
+  document.getElementById('clientesSearch').addEventListener('input', renderClientes);
+
+  async function toggleEstadoCliente(id, estado) {
+    try {
+      await apiFetch(`/clientes/${id}/estado`, { method: 'PUT', body: JSON.stringify({ estado }) });
+      showToast('Cuenta actualizada', estado === 'activo' ? 'El cliente fue reactivado.' : 'El cliente fue desactivado y ya no puede iniciar sesión.');
+      cargarClientes();
+    } catch (err) { showErrorToast(err); }
+  }
+
+  async function eliminarCliente(id) {
+    if (!confirm('¿Eliminar este cliente? Solo es posible si no tiene citas activas, suscripciones vigentes ni historial.')) return;
+    try {
+      await apiFetch(`/clientes/${id}`, { method: 'DELETE' });
+      showToast('Cliente eliminado', 'RF-53 · RF-55');
+      cargarClientes();
+    } catch (err) { showErrorToast(err); }
+  }
+
+  // Un solo modal para crear y editar: si hay id, es edición (sin contraseña ni consentimiento)
+  function abrirCliente(id) {
+    const c = id ? clientesCache.find(x => x.id_usuario === id) : null;
+    document.getElementById('formCliente').reset();
+    document.getElementById('clienteId').value = c ? c.id_usuario : '';
+    document.getElementById('clienteModalTitulo').textContent = c ? 'Editar cliente' : 'Nuevo cliente';
+    document.getElementById('clienteNuevoWrap').style.display = c ? 'none' : '';
+    document.getElementById('clienteConsentimiento').required = !c;
+    document.getElementById('clienteContrasena').required = !c;
+    if (c) {
+      document.getElementById('clienteNombre').value = c.nombre;
+      document.getElementById('clienteCorreo').value = c.correo;
+      document.getElementById('clienteTelefono').value = c.telefono || '';
+    }
+    bootstrap.Modal.getOrCreateInstance(document.getElementById('clienteModal')).show();
+  }
+
+  document.getElementById('formCliente').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const id = document.getElementById('clienteId').value;
+    const datos = {
+      nombre: document.getElementById('clienteNombre').value.trim(),
+      correo: document.getElementById('clienteCorreo').value.trim(),
+      telefono: document.getElementById('clienteTelefono').value.trim(),
+    };
+    try {
+      if (id) {
+        await apiFetch(`/clientes/${id}`, { method: 'PUT', body: JSON.stringify(datos) });
+        showToast('Cliente actualizado', 'Los datos se guardaron correctamente.');
+      } else {
+        if (!document.getElementById('clienteConsentimiento').checked) {
+          showToast('Falta la autorización', 'El cliente debe autorizar el tratamiento de sus datos (Ley 1581 de 2012) antes de registrarse.', 'error');
+          return;
+        }
+        await apiFetch('/clientes', { method: 'POST', body: JSON.stringify({ ...datos, contrasena: document.getElementById('clienteContrasena').value, acepto_tratamiento_datos: true }) });
+        showToast('Cliente registrado', 'RF-42 · consentimiento de datos registrado (Ley 1581 de 2012)');
+      }
+      bootstrap.Modal.getInstance(document.getElementById('clienteModal')).hide();
+      cargarClientes();
+    } catch (err) { showErrorToast(err); }
+  });
+
+  // ═══════════════════════════════════════════════
+  // NUEVA CITA (el admin agenda a nombre de un cliente, RF-01)
+  // ═══════════════════════════════════════════════
+  const inputCitaFecha = document.getElementById('citaFecha');
+  inputCitaFecha.min = hoyLocal();
+  const opciones = (lista, valor, texto) => '<option value="">Selecciona…</option>' + lista.map(x => `<option value="${x[valor]}">${escapeHtml(x[texto])}</option>`).join('');
+
+  // Un solo modal para agendar y reprogramar: si llega un id de cita, es reprogramación
+  async function abrirNuevaCita(idCita) {
+    try {
+      const cita = idCita ? citasCache.find(c => c.id_cita === idCita) : null;
+      const [clientes, servicios, barberos] = await Promise.all([apiFetch('/clientes'), apiFetch('/servicios?activos=1'), apiFetch('/barberos')]);
+      serviciosCache = servicios;
+      document.getElementById('citaId').value = cita ? cita.id_cita : '';
+      document.getElementById('citaModalTitulo').textContent = cita ? 'Reprogramar cita' : 'Nueva cita';
+      document.getElementById('citaGuardarBtn').textContent = cita ? 'Guardar cambios' : 'Agendar';
+      const selCliente = document.getElementById('citaCliente');
+      selCliente.innerHTML = opciones(clientes.filter(c => c.estado === 'activo' || (cita && c.id_usuario === cita.id_cliente)), 'id_usuario', 'nombre');
+      document.getElementById('citaServicio').innerHTML = opciones(servicios, 'id_servicio', 'nombre');
+      document.getElementById('citaBarbero').innerHTML = opciones(barberos.filter(b => b.estado === 'activo' && (b.disponible || (cita && b.id_usuario === cita.id_barbero))), 'id_usuario', 'nombre');
+      inputCitaFecha.value = '';
+      document.getElementById('citaHora').innerHTML = '<option value="">Elige servicio, barbero y fecha</option>';
+      selCliente.disabled = !!cita; // al reprogramar no se cambia de cliente
+      if (cita) {
+        selCliente.value = cita.id_cliente;
+        document.getElementById('citaServicio').value = cita.id_servicio;
+        document.getElementById('citaBarbero').value = cita.id_barbero;
+        inputCitaFecha.value = cita.fecha.slice(0, 10);
+        await cargarHorasCita();
+        document.getElementById('citaHora').value = cita.hora_inicio;
+      }
+      bootstrap.Modal.getOrCreateInstance(document.getElementById('citaModal')).show();
+    } catch (err) { showErrorToast(err); }
+  }
+
+  async function cargarHorasCita() {
+    const [servicio, barbero, fecha] = ['citaServicio', 'citaBarbero', 'citaFecha'].map(id => document.getElementById(id).value);
+    const sel = document.getElementById('citaHora');
+    if (!servicio || !barbero || !fecha) { sel.innerHTML = '<option value="">Elige servicio, barbero y fecha</option>'; return; }
+    try {
+      const excluir = document.getElementById('citaId').value || 0; // la cita que se mueve no ocupa su propio horario
+      const slots = await apiFetch(`/citas/disponibilidad?id_barbero=${barbero}&fecha=${fecha}&id_servicio=${servicio}&excluir=${excluir}`);
+      sel.innerHTML = slots.length ? '<option value="">Selecciona…</option>' + slots.map(x => `<option value="${x.hora_inicio}">${formatoHora(x.hora_inicio)}</option>`).join('')
+                                   : '<option value="">Sin horarios libres ese día</option>';
+    } catch (err) { sel.innerHTML = '<option value="">No se pudo consultar</option>'; showErrorToast(err); }
+  }
+  ['citaServicio', 'citaBarbero', 'citaFecha'].forEach(id => document.getElementById(id).addEventListener('change', cargarHorasCita));
+
+  document.getElementById('formCita').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const id = document.getElementById('citaId').value;
+    const datos = {
+      id_servicio: Number(document.getElementById('citaServicio').value), id_barbero: Number(document.getElementById('citaBarbero').value),
+      fecha: inputCitaFecha.value, hora_inicio: document.getElementById('citaHora').value,
+    };
+    try {
+      if (id) await apiFetch(`/citas/${id}`, { method: 'PUT', body: JSON.stringify(datos) });
+      else await apiFetch('/citas', { method: 'POST', body: JSON.stringify({ ...datos, id_cliente: Number(document.getElementById('citaCliente').value) }) });
+      bootstrap.Modal.getInstance(document.getElementById('citaModal')).hide();
+      showToast(id ? 'Cita reprogramada' : 'Cita agendada', id ? 'El nuevo horario quedó guardado. RF-12' : 'Queda pendiente de confirmación. RF-01');
+      cargarCitas();
+    } catch (err) { showErrorToast(err); if (err.status === 409) cargarHorasCita(); }
+  });
+
+  // ═══════════════════════════════════════════════
+  // SUSCRIPCIONES Y PLANES (RF-68 a RF-77)
+  // ═══════════════════════════════════════════════
+  let planesAdmin = [];
+
+  async function cargarSuscripciones() {
+    const tbody = document.getElementById('suscripcionesTbody');
+    try {
+      const [planes, suscripciones] = await Promise.all([apiFetch('/planes/todos'), apiFetch('/suscripciones')]);
+      planesAdmin = planes;
+      document.getElementById('planesResumen').innerHTML = planes.map(p => `
+        <div class="col-6 col-lg-3"><div class="plan-mini">
+          <div class="plan-name">${escapeHtml(p.nombre)} ${p.estado === 'inactivo' ? '(inactivo)' : ''}</div>
+          <div class="price">${p.suscriptores}</div><div class="subs">suscriptores activos · ${formatoMoneda(p.precio)}</div>
+          <button class="icon-btn mt-2" title="Editar plan (RF-68)" onclick="abrirPlan(${p.id_plan})"><i class="bi bi-pencil"></i></button>
+          <button class="icon-btn mt-2" title="${p.estado === 'activo' ? 'Desactivar' : 'Activar'} plan" onclick="toggleEstadoPlan(${p.id_plan}, '${p.estado === 'activo' ? 'inactivo' : 'activo'}')"><i class="bi bi-${p.estado === 'activo' ? 'eye-slash' : 'eye'}"></i></button>
+        </div></div>`).join('') || '<div class="col-12 empty-state">Todavía no hay planes. Crea el primero.</div>';
+
+      tbody.innerHTML = suscripciones.map(s => `
+        <tr>
+          <td>${escapeHtml(s.cliente_nombre)}</td><td>${escapeHtml(s.plan_nombre)}</td>
+          <td>${formatoFecha(s.fecha_inicio)}</td><td>${formatoFecha(s.fecha_fin)}</td>
+          <td><span class="badge-status ${s.estado}">${capitaliza(s.estado)}</span></td>
+          <td><span class="badge-status ${s.pagada ? 'exitoso' : 'pendiente'}">${s.pagada ? 'Pagada' : 'Pendiente'}</span></td>
+          <td>${s.estado === 'cancelada' ? '<span class="text-muted" style="font-size:.78rem">—</span>' : `
+            <button class="icon-btn" title="Renovar (RF-77)" onclick="accionSuscripcion(${s.id_suscripcion}, 'renovar')"><i class="bi bi-arrow-repeat"></i></button>
+            ${s.estado === 'activa' ? `<button class="icon-btn" title="Pausar" onclick="accionSuscripcion(${s.id_suscripcion}, 'pausada')"><i class="bi bi-pause"></i></button>` : ''}
+            ${s.estado === 'pausada' ? `<button class="icon-btn" title="Reactivar" onclick="accionSuscripcion(${s.id_suscripcion}, 'activa')"><i class="bi bi-play"></i></button>` : ''}
+            <button class="icon-btn danger" title="Cancelar" onclick="accionSuscripcion(${s.id_suscripcion}, 'cancelada')"><i class="bi bi-x-lg"></i></button>`}</td>
+        </tr>`).join('') || '<tr><td colspan="7" class="text-center text-muted py-3">Todavía no hay suscripciones.</td></tr>';
+    } catch (err) {
+      tbody.innerHTML = '<tr><td colspan="7" class="text-center text-muted py-3">No se pudieron cargar las suscripciones.</td></tr>';
+      showErrorToast(err);
+    }
+  }
+
+  async function accionSuscripcion(id, accion) {
+    if (accion === 'cancelada' && !confirm('¿Cancelar esta suscripción? No se puede deshacer.')) return;
+    try {
+      if (accion === 'renovar') await apiFetch(`/suscripciones/${id}/renovar`, { method: 'POST' });
+      else await apiFetch(`/suscripciones/${id}/estado`, { method: 'PUT', body: JSON.stringify({ estado: accion }) });
+      showToast('Suscripción actualizada', 'RF-77');
+      cargarSuscripciones();
+    } catch (err) { showErrorToast(err); }
+  }
+
+  function abrirPlan(id) {
+    const p = id ? planesAdmin.find(x => x.id_plan === id) : null;
+    document.getElementById('planModalTitulo').textContent = p ? 'Editar plan' : 'Nuevo plan';
+    document.getElementById('planId').value = p ? p.id_plan : '';
+    document.getElementById('planNombre').value = p ? p.nombre : '';
+    document.getElementById('planDescripcion').value = p ? (p.descripcion || '') : '';
+    document.getElementById('planPrecio').value = p ? p.precio : '';
+    document.getElementById('planDuracion').value = p ? p.duracion_dias : 30;
+    bootstrap.Modal.getOrCreateInstance(document.getElementById('planModal')).show();
+  }
+
+  document.getElementById('formPlan').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const id = document.getElementById('planId').value;
+    const datos = { nombre: document.getElementById('planNombre').value.trim(), descripcion: document.getElementById('planDescripcion').value.trim(),
+      precio: Number(document.getElementById('planPrecio').value), duracion_dias: Number(document.getElementById('planDuracion').value) };
+    try {
+      await apiFetch(id ? `/planes/${id}` : '/planes', { method: id ? 'PUT' : 'POST', body: JSON.stringify(datos) });
+      bootstrap.Modal.getInstance(document.getElementById('planModal')).hide();
+      showToast(id ? 'Plan actualizado' : 'Plan creado', 'RF-68');
+      cargarSuscripciones();
+    } catch (err) { showErrorToast(err); }
+  });
+
+  async function toggleEstadoPlan(id, estado) {
+    try {
+      await apiFetch(`/planes/${id}`, { method: 'PUT', body: JSON.stringify({ estado }) });
+      showToast('Plan actualizado', estado === 'activo' ? 'El plan vuelve a estar disponible.' : 'El plan ya no se ofrece a los clientes.');
+      cargarSuscripciones();
+    } catch (err) { showErrorToast(err); }
+  }
+
+  async function abrirAsignarPlan() {
+    try {
+      const [clientes, planes] = await Promise.all([apiFetch('/clientes'), apiFetch('/planes')]);
+      document.getElementById('asignarCliente').innerHTML = opciones(clientes.filter(c => c.estado === 'activo'), 'id_usuario', 'nombre');
+      document.getElementById('asignarPlan').innerHTML = opciones(planes, 'id_plan', 'nombre');
+      bootstrap.Modal.getOrCreateInstance(document.getElementById('asignarModal')).show();
+    } catch (err) { showErrorToast(err); }
+  }
+
+  document.getElementById('formAsignar').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    try {
+      await apiFetch('/suscripciones', { method: 'POST', body: JSON.stringify({ id_usuario: Number(document.getElementById('asignarCliente').value), id_plan: Number(document.getElementById('asignarPlan').value) }) });
+      bootstrap.Modal.getInstance(document.getElementById('asignarModal')).hide();
+      showToast('Plan asignado', 'RF-70');
+      cargarSuscripciones();
+    } catch (err) { showErrorToast(err); }
+  });
+
+  // ═══════════════════════════════════════════════
+  // PAGOS (RF-56, RF-64, RF-67)
+  // ═══════════════════════════════════════════════
+  let pagosCache = [];
+  const conceptoPago = (p) => p.id_cita ? `Cita #${p.id_cita}` : `Suscripción ${p.plan_nombre || ''}`;
+  const clientePago = (p) => p.cliente_cita || p.cliente_suscripcion || '—';
+
+  async function cargarPagos() {
+    const tbody = document.getElementById('pagosTbody');
+    try {
+      pagosCache = await apiFetch('/pagos');
+      renderPagos();
+    } catch (err) {
+      tbody.innerHTML = '<tr><td colspan="7" class="text-center text-muted py-3">No se pudieron cargar los pagos.</td></tr>';
+      showErrorToast(err);
+    }
+  }
+
+  function renderPagos() {
+    const estado = document.getElementById('pagosFiltro').value;
+    const filas = pagosCache.filter(p => estado === 'todos' || p.estado === estado);
+    document.getElementById('pagosTbody').innerHTML = filas.map(p => `
+      <tr>
+        <td>${new Date(p.fecha).toLocaleDateString('es-CO', { day: 'numeric', month: 'short', year: 'numeric' })}</td>
+        <td>${escapeHtml(conceptoPago(p))}</td><td>${escapeHtml(clientePago(p))}</td>
+        <td>${formatoMoneda(p.monto)}</td><td>${escapeHtml(p.metodo_pago_wompi || p.metodo_pago || 'Simulado')}</td>
+        <td><span class="badge-status ${p.estado === 'exitoso' ? 'exitoso' : p.estado === 'fallido' ? 'fallido' : p.estado === 'reembolsado' ? 'reembolsado' : 'pendiente'}">${capitaliza(p.estado)}</span></td>
+        <td>${p.estado === 'exitoso' ? `<button class="icon-btn danger" title="Reembolsar (RF-67)" onclick="reembolsar(${p.id_pago})"><i class="bi bi-arrow-counterclockwise"></i></button>` : ''}</td>
+      </tr>`).join('') || '<tr><td colspan="7" class="text-center text-muted py-3">No hay pagos que coincidan.</td></tr>';
+  }
+  document.getElementById('pagosFiltro').addEventListener('change', renderPagos);
+
+  async function reembolsar(id) {
+    if (!confirm('¿Reembolsar este pago?')) return;
+    try {
+      await apiFetch(`/pagos/${id}/reembolso`, { method: 'PUT' });
+      showToast('Pago reembolsado', 'RF-67');
+      cargarPagos();
+    } catch (err) { showErrorToast(err); }
+  }
+
+  async function exportarPagos() {
+    try {
+      const pagos = pagosCache.length ? pagosCache : await apiFetch('/pagos');
+      descargarCSV('historial-pagos.csv', [['Fecha', 'Referencia', 'Concepto', 'Cliente', 'Monto', 'Método', 'Estado'],
+        ...pagos.map(p => [new Date(p.fecha).toLocaleString('es-CO'), p.referencia, conceptoPago(p), clientePago(p), p.monto, p.metodo_pago_wompi || p.metodo_pago || 'Simulado', p.estado])]);
+      showToast('Reporte exportado', 'Se descargó historial-pagos.csv. RF-64');
+    } catch (err) { showErrorToast(err); }
+  }
+
+  // ═══════════════════════════════════════════════
+  // REPORTES (cifras reales del mes)
+  // ═══════════════════════════════════════════════
+  async function cargarReportes() {
+    try {
+      const r = await apiFetch('/reportes/resumen');
+      document.getElementById('repIngresos').textContent = formatoMoneda(r.ingresos_mes + r.ingresos_suscripciones);
+      document.getElementById('repIngresosDetalle').textContent = `citas ${formatoMoneda(r.ingresos_mes)} · planes ${formatoMoneda(r.ingresos_suscripciones)}`;
+      document.getElementById('repCitas').textContent = r.citas_completadas;
+      document.getElementById('repTicket').textContent = `ticket promedio ${formatoMoneda(r.ticket_promedio)}`;
+      document.getElementById('repCancel').textContent = r.tasa_cancelacion + '%';
+      document.getElementById('repSubs').textContent = r.nuevas_suscripciones;
+      const max = Math.max(...r.semanas, 1);
+      document.getElementById('repSemanas').innerHTML = r.semanas.map((v, i) =>
+        `<div class="bar-col"><div class="bar-val">${formatoMoneda(v)}</div><div class="bar" style="height:${Math.round(v / max * 140)}px"></div><div class="bar-lbl">Sem ${i + 1}</div></div>`).join('');
+    } catch (err) { showErrorToast(err); }
+  }
+
+  // ═══════════════════════════════════════════════
+  // CONFIGURACIÓN DEL NEGOCIO
+  // ═══════════════════════════════════════════════
+  async function cargarConfiguracionForm() {
+    try {
+      const config = await apiFetch('/configuracion');
+      document.getElementById('cfgNombreNegocio').value = config.nombre_negocio || '';
+      document.getElementById('cfgDireccion').value = config.direccion || '';
+      document.getElementById('cfgTelefono').value = config.telefono || '';
+      document.getElementById('cfgHorarioLunVie').value = config.horario_lun_vie || '';
+      document.getElementById('cfgHorarioSabado').value = config.horario_sabado || '';
+      document.getElementById('cfgHorarioDomingo').value = config.horario_domingo || '';
+    } catch (err) {
+      showErrorToast(err);
+    }
+  }
+
+  document.getElementById('formDatosNegocio').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    try {
+      await apiFetch('/configuracion', {
+        method: 'PUT',
+        body: JSON.stringify({
+          nombre_negocio: document.getElementById('cfgNombreNegocio').value.trim(),
+          direccion: document.getElementById('cfgDireccion').value.trim(),
+          telefono: document.getElementById('cfgTelefono').value.trim(),
+        }),
+      });
+      showToast('Cambios guardados', 'La configuración del negocio se actualizó correctamente.');
+      cargarConfiguracionNegocio(); // refresca el nombre mostrado en el sidebar de inmediato
+    } catch (err) { showErrorToast(err); }
+  });
+
+  document.getElementById('formHorarioNegocio').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    try {
+      await apiFetch('/configuracion', {
+        method: 'PUT',
+        body: JSON.stringify({
+          horario_lun_vie: document.getElementById('cfgHorarioLunVie').value.trim(),
+          horario_sabado: document.getElementById('cfgHorarioSabado').value.trim(),
+          horario_domingo: document.getElementById('cfgHorarioDomingo').value.trim(),
+        }),
+      });
+      showToast('Cambios guardados', 'El horario de atención se actualizó correctamente.');
+    } catch (err) { showErrorToast(err); }
+  });
+
+  // ═══════════════════════════════════════════════
+  // RESEÑAS (solo lectura para el admin — no existe función de moderación)
+  // ═══════════════════════════════════════════════
+  async function cargarResenasAdmin() {
+    const cont = document.getElementById('listaResenasAdmin');
+    try {
+      const resenas = await apiFetch('/resenas');
+      if (!resenas.length) {
+        cont.innerHTML = '<div class="col-12 empty-state"><i class="bi bi-star"></i>Todavía no hay reseñas registradas.</div>';
+        return;
+      }
+      cont.innerHTML = resenas.map(r => `
+        <div class="col-md-6 col-lg-4">
+          <div class="review-card">
+            <div class="reviewer"><div class="av">${inicialesDe(r.cliente_nombre)}</div><div><div class="name">${escapeHtml(r.cliente_nombre)}</div><div class="date">Sobre ${escapeHtml(r.barbero_nombre)} · ${formatoFecha(aTextoFecha(new Date(r.fecha)))}</div></div></div>
+            <div class="stars">${'★'.repeat(r.calificacion)}${'☆'.repeat(5 - r.calificacion)}</div>
+            ${r.comentario ? `<p>${escapeHtml(r.comentario)}</p>` : '<p class="text-muted">(sin comentario)</p>'}
+          </div>
+        </div>`).join('');
+    } catch (err) {
+      cont.innerHTML = '<div class="col-12 empty-state">No se pudieron cargar las reseñas.</div>';
+      showErrorToast(err);
+    }
+  }
+
+  // ═══════════════════════════════════════════════
+  // MI PERFIL
+  // ═══════════════════════════════════════════════
+  async function cargarPerfilAdmin() {
+    try {
+      const perfil = await apiFetch('/auth/perfil');
+      document.getElementById('perfilNombre').value = perfil.nombre;
+      document.getElementById('perfilCorreo').value = perfil.correo;
+      document.getElementById('perfilTelefono').value = perfil.telefono || '';
+    } catch (err) { showErrorToast(err); }
+  }
+
+  document.getElementById('formPerfilAdmin').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    try {
+      const data = await apiFetch('/auth/perfil', {
+        method: 'PUT',
+        body: JSON.stringify({
+          nombre: document.getElementById('perfilNombre').value.trim(),
+          correo: document.getElementById('perfilCorreo').value.trim(),
+          telefono: document.getElementById('perfilTelefono').value.trim(),
+        }),
+      });
+      Sesion.actualizarUsuario({ nombre: data.usuario.nombre, correo: data.usuario.correo });
+      document.getElementById('userChipName').textContent = data.usuario.nombre;
+      document.getElementById('userChipAvatar').textContent = inicialesDe(data.usuario.nombre);
+      showToast('Perfil actualizado', 'Tus cambios se guardaron correctamente.');
+    } catch (err) { showErrorToast(err); }
+  });
+
+  document.getElementById('formPasswordAdmin').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const actual = document.getElementById('passwordActual').value;
+    const nueva = document.getElementById('passwordNueva').value;
+    if (!actual || !nueva) { showToast('Faltan datos', 'Escribe tu contraseña actual y la nueva.', 'error'); return; }
+    try {
+      await apiFetch('/auth/perfil', { method: 'PUT', body: JSON.stringify({ contrasena_actual: actual, nueva_contrasena: nueva }) });
+      document.getElementById('formPasswordAdmin').reset();
+      showToast('Contraseña actualizada', 'Úsala la próxima vez que inicies sesión.');
+    } catch (err) { showErrorToast(err); }
+  });
+</script>
+</body>
+</html>

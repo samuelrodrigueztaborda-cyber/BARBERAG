@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BarberAg – Manrique Jardín, Medellín</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    /* ═══════════════════════════════════════════════
+       ESTILOS DE LA PÁGINA
+       Bootstrap hace el layout (d-flex, gap, text-center, position-fixed, rounded-circle…)
+       directamente en el HTML. Aquí solo queda lo propio de la marca: colores, tipografías,
+       tarjetas y los ajustes a componentes de Bootstrap.
+       Orden: marca y base → componentes de Bootstrap → secciones → tarjetas → reserva →
+       galería → footer → elementos flotantes → modales y FAQ → utilidades
+       ═══════════════════════════════════════════════ */
+
+    /* ─── MARCA Y BASE ─── */
+    :root {
+      --gold:   #C9A84C;
+      --gold2:  #E8C96A;
+      --dark:   #0E0E0E;
+      --dark2:  #161616;
+      --dark3:  #1F1F1F;
+      --card-bg:#1A1A1A;
+      --text:   #F0EDE6;
+      --muted:  #9A9287;
+      --radius: 12px;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--dark);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+    h1,h2,h3,h4,h5 { font-family: 'Playfair Display', serif; }
+    a { text-decoration: none; }
+    img { display: block; }
+    section { padding: 5rem 0; }
+    .container-lg { max-width: 1180px; }
+    .text-gold { color: var(--gold) !important; }
+    .texto-suave { color: var(--muted); }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--dark2); }
+    ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
+
+    /* ─── BOTONES ─── */
+    .btn-gold {
+      background: var(--gold); color: var(--dark);
+      font-weight: 700; letter-spacing: .05em;
+      border: none; border-radius: 6px;
+      padding: .5rem 1.2rem; font-size: .85rem;
+      transition: background .2s, transform .15s;
+    }
+    .btn-gold:hover { background: var(--gold2); transform: translateY(-1px); }
+    .btn-outline-gold {
+      border: 1.5px solid var(--gold); color: var(--gold);
+      background: transparent; font-weight: 600;
+      border-radius: 6px; padding: .5rem 1.2rem; font-size: .85rem;
+      transition: all .2s;
+    }
+    .btn-outline-gold:hover { background: var(--gold); color: var(--dark); }
+
+    /* ─── NAVBAR Y BUSCADOR ─── */
+    .navbar {
+      background: rgba(14,14,14,.92);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(201,168,76,.15);
+      padding: .9rem 1.5rem;
+      position: sticky; top: 0; z-index: 1000;
+    }
+    .navbar-brand {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem; font-weight: 900;
+      color: var(--gold) !important;
+      letter-spacing: .05em;
+    }
+    .navbar-brand span { color: var(--text); }
+    .nav-link {
+      color: var(--muted) !important;
+      font-weight: 500; font-size: .88rem;
+      letter-spacing: .05em; text-transform: uppercase;
+      padding: .4rem .9rem !important;
+      transition: color .2s;
+    }
+    .nav-link:hover, .nav-link.active { color: var(--gold) !important; }
+    .nav-link.active { border-bottom: 2px solid var(--gold); }
+    .nav-user { display: flex; align-items: center; gap: .4rem; }
+    .nav-avatar {
+      width: 24px; height: 24px; border-radius: 50%;
+      background: var(--dark); color: var(--gold);
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: .75rem; font-weight: 700;
+    }
+    .search-wrap { width: 200px; }
+    .search-wrap input {
+      background: var(--dark3); border: 1px solid rgba(201,168,76,.2);
+      color: var(--text); border-radius: 6px 0 0 6px;
+      font-size: .83rem;
+    }
+    .search-wrap input::placeholder { color: var(--muted); }
+    .search-wrap input:focus { background: var(--dark3); color: var(--text); box-shadow: 0 0 0 2px rgba(201,168,76,.3); border-color: var(--gold); }
+    .search-wrap button {
+      background: var(--gold); border: none; color: var(--dark);
+      border-radius: 0 6px 6px 0; padding: .375rem .75rem;
+    }
+
+    /* ─── CARRUSEL PRINCIPAL ─── */
+    #heroCarousel .carousel-item img {
+      height: 560px; object-fit: cover;
+      filter: brightness(.55);
+    }
+    .carousel-caption { left: 6%; right: auto; text-align: left; bottom: 14%; }
+    .carousel-caption .label {
+      display: inline-block; background: var(--gold);
+      color: var(--dark); font-size: .7rem; font-weight: 700;
+      letter-spacing: .12em; text-transform: uppercase;
+      padding: .3rem .8rem; border-radius: 4px; margin-bottom: .8rem;
+    }
+    .carousel-caption h2 {
+      font-size: clamp(1.8rem,4vw,3.2rem); font-weight: 900;
+      line-height: 1.15; margin-bottom: .8rem;
+      text-shadow: 0 2px 20px rgba(0,0,0,.6);
+    }
+    .carousel-caption p { font-size: 1.05rem; color: rgba(240,237,230,.8); max-width: 500px; }
+    .carousel-indicators [data-bs-target] {
+      width: 28px; height: 3px; border-radius: 2px;
+      background: rgba(201,168,76,.4); border: none;
+    }
+    .carousel-indicators .active { background: var(--gold); }
+
+    /* ─── ENCABEZADOS DE SECCIÓN Y SEPARADOR ─── */
+    .gold-divider {
+      border: none; height: 1px; max-width: 200px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      margin: 3.5rem auto;
+    }
+    .section-header { margin-bottom: 2.5rem; }
+    .section-header .tag {
+      font-size: .72rem; font-weight: 700; letter-spacing: .18em;
+      text-transform: uppercase; color: var(--gold);
+    }
+    .section-header h2 { font-size: clamp(1.6rem,3vw,2.4rem); margin: .3rem 0 .5rem; }
+    .section-header p { color: var(--muted); max-width: 500px; }
+
+    /* ─── TARJETAS: base común ─── */
+    .service-card, .team-card, .plan-card, .review-card {
+      background: var(--card-bg);
+      border: 1px solid rgba(255,255,255,.06);
+      border-radius: var(--radius);
+    }
+    .team-card .stars, .review-card .stars { color: var(--gold); }
+
+    /* ─── SERVICIOS ─── */
+    .service-card {
+      transition: transform .3s, box-shadow .3s, border-color .3s;
+      cursor: pointer;
+    }
+    .service-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 50px rgba(0,0,0,.5);
+      border-color: rgba(201,168,76,.4);
+    }
+    .service-card img { width: 100%; height: 220px; object-fit: cover; transition: transform .5s; }
+    .service-card:hover img { transform: scale(1.05); }
+    .service-card .price-tag {
+      top: 12px; right: 12px;
+      background: var(--gold); color: var(--dark);
+      font-weight: 700; font-size: .8rem;
+      padding: .25rem .65rem; border-radius: 5px;
+    }
+    .service-card .body { padding: 1.25rem; }
+    .service-card .body h5 { font-size: 1.05rem; margin-bottom: .4rem; }
+    .service-card .body p { color: var(--muted); font-size: .85rem; line-height: 1.5; margin-bottom: 1rem; }
+    .service-card .meta { font-size: .78rem; color: var(--muted); }
+    .service-card .meta span { display: flex; align-items: center; gap: .3rem; }
+    .service-card .meta i { color: var(--gold); }
+
+    /* ─── EQUIPO ─── */
+    .team-card { padding: 2rem 1.5rem; transition: transform .3s, border-color .3s; }
+    .team-card:hover { transform: translateY(-4px); border-color: rgba(201,168,76,.3); }
+    .team-card .avatar {
+      width: 90px; height: 90px;
+      background: linear-gradient(135deg, var(--gold), #8B6914);
+      font-size: 2rem; font-weight: 700;
+      color: var(--dark);
+      font-family: 'Playfair Display', serif;
+    }
+    .team-card h5 { margin-bottom: .2rem; }
+    .team-card .stars { font-size: .85rem; margin: .6rem 0; }
+    .team-card .specialties { gap: .4rem; margin-top: .8rem; }
+    .team-card .specialties span {
+      background: rgba(201,168,76,.12); color: var(--gold);
+      font-size: .72rem; padding: .2rem .6rem; border-radius: 20px;
+    }
+
+    /* ─── PLANES ─── */
+    .plan-card { padding: 2rem; transition: transform .3s, border-color .3s; }
+    .plan-card:hover { transform: translateY(-5px); }
+    .plan-card .plan-name { font-size: .75rem; letter-spacing: .15em; text-transform: uppercase; color: var(--muted); }
+    .plan-card .price { font-family: 'Playfair Display', serif; font-size: 2.8rem; color: var(--gold); font-weight: 900; line-height: 1; }
+    .plan-card .price sub { font-size: 1rem; font-family: 'DM Sans', sans-serif; font-weight: 400; color: var(--muted); }
+    .plan-card .plan-desc { font-size: .88rem; color: var(--muted); margin: .75rem 0 1.25rem; }
+
+    /* ─── RESERVA DE CITA ─── */
+    #agendar { background: var(--dark2); }
+    /* Se mantiene con CSS grid porque corta en 768px; el breakpoint md de Bootstrap cortaría en 769px */
+    .booking-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+    @media(max-width:768px){ .booking-grid { grid-template-columns: 1fr; } }
+    .booking-info h2 { font-size: 2.2rem; }
+    .booking-info p { color: var(--muted); line-height: 1.7; }
+    .booking-info .contact-item { display: flex; align-items: center; gap: .8rem; margin-bottom: .8rem; color: var(--muted); }
+    .booking-info .contact-item i { color: var(--gold); font-size: 1.1rem; }
+    .info-chip {
+      flex: 1; text-align: center; padding: 1rem; border-radius: 10px;
+      background: rgba(201,168,76,.1); border: 1px solid rgba(201,168,76,.2);
+    }
+    .info-chip .code { color: var(--gold); font-size: 1.5rem; font-weight: 700; font-family: 'Playfair Display', serif; }
+    .info-chip .desc { font-size: .75rem; color: var(--muted); }
+    .booking-form-wrap { background: var(--card-bg); border-radius: var(--radius); padding: 2rem; border: 1px solid rgba(201,168,76,.12); }
+    .aviso { background: rgba(201,168,76,.1); border: 1px solid rgba(201,168,76,.25); border-radius: 8px; padding: .75rem 1rem; font-size: .85rem; }
+    .aviso-error { background: rgba(224,82,82,.12); border-color: rgba(224,82,82,.3); color: #f08a8a; padding: .7rem 1rem; font-size: .84rem; }
+
+    /* formularios (sobrescribe los de Bootstrap) */
+    .form-label { font-size: .82rem; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin-bottom: .35rem; }
+    .form-control, .form-select {
+      background: var(--dark3); border: 1px solid rgba(255,255,255,.08);
+      color: var(--text); border-radius: 8px; padding: .65rem 1rem; font-size: .9rem;
+    }
+    .form-control:focus, .form-select:focus {
+      background: var(--dark3); color: var(--text);
+      border-color: rgba(201,168,76,.5); box-shadow: 0 0 0 3px rgba(201,168,76,.1);
+    }
+    .form-select option { background: var(--dark2); }
+    .form-control::placeholder { color: var(--muted); }
+
+    /* ─── RESEÑAS ─── */
+    #resenas { background: var(--dark2); }
+    .review-card { padding: 1.5rem; transition: transform .3s; }
+    .review-card:hover { transform: translateY(-3px); }
+    .review-card .reviewer { gap: .9rem; margin-bottom: .8rem; }
+    .review-card .av {
+      width: 44px; height: 44px;
+      background: linear-gradient(135deg, #555, #333);
+      font-weight: 700; font-size: 1rem; color: var(--gold);
+    }
+    .review-card .name { font-weight: 600; font-size: .9rem; }
+    .review-card .date { font-size: .75rem; color: var(--muted); }
+    .review-card .stars { font-size: .8rem; margin-bottom: .6rem; }
+    .review-card p { font-size: .87rem; color: var(--muted); line-height: 1.6; margin: 0; }
+
+    /* ─── GALERÍA ─── */
+    /* Se mantiene con CSS grid porque corta en 576px; el breakpoint sm de Bootstrap cortaría en 577px */
+    .gallery-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: .5rem; }
+    @media(max-width:576px){ .gallery-grid { grid-template-columns: repeat(2,1fr); } }
+    .gallery-item { position: relative; overflow: hidden; border-radius: 8px; aspect-ratio: 1; }
+    .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s; }
+    .gallery-item:hover img { transform: scale(1.08); }
+    .gallery-item .overlay {
+      position: absolute; inset: 0;
+      background: rgba(14,14,14,.55);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; transition: opacity .3s;
+    }
+    .gallery-item:hover .overlay { opacity: 1; }
+    .gallery-item .overlay i { font-size: 1.6rem; color: var(--gold); }
+
+    /* ─── FOOTER ─── */
+    footer { background: var(--dark2); border-top: 1px solid rgba(201,168,76,.12); }
+    footer h5 { font-size: .8rem; letter-spacing: .15em; text-transform: uppercase; color: var(--gold); margin-bottom: 1rem; }
+    footer a { color: var(--muted); font-size: .87rem; display: block; margin-bottom: .4rem; transition: color .2s; }
+    footer a:hover { color: var(--gold); }
+    footer p { color: var(--muted); font-size: .85rem; }
+    .footer-logo { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 900; color: var(--gold); }
+    .footer-hr { border-color: rgba(255,255,255,.06); margin: 2rem 0; }
+    .footer-copy { font-size: .8rem; }
+    .footer-legal { font-size: .78rem; color: var(--muted); }
+    .footer-legal a, .footer-legal a:hover { color: var(--muted); }
+    .social-links { display: flex; gap: .8rem; margin-top: .5rem; }
+    .social-links a {
+      width: 36px; height: 36px; border-radius: 50%;
+      border: 1px solid rgba(201,168,76,.3);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--gold); font-size: .95rem;
+      transition: background .2s, border-color .2s;
+    }
+    .social-links a:hover { background: var(--gold); color: var(--dark); border-color: var(--gold); }
+
+    /* ─── ELEMENTOS FLOTANTES (el layout viene de las clases de Bootstrap en el HTML) ─── */
+    #loader { z-index: 9999; background: var(--dark); transition: opacity .6s .2s; }
+    #loader .scissors { font-size: 3rem; color: var(--gold); animation: spin 1.2s linear infinite; }
+    #loader p { margin-top: .8rem; letter-spacing: .2em; text-transform: uppercase; font-size: .75rem; color: var(--muted); }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    #loader.fade { opacity: 0; pointer-events: none; }
+
+    #read-prog { height: 3px; background: var(--gold); z-index: 9998; width: 0; transition: width .1s; }
+
+    #btt {
+      bottom: 5rem; right: 1.5rem; z-index: 8000;
+      width: 40px; height: 40px; background: var(--gold); color: var(--dark);
+      font-size: 1.1rem; opacity: 0; transition: opacity .3s; cursor: pointer;
+    }
+    #btt.show { opacity: 1; }
+
+    .wa-btn {
+      bottom: 1.5rem; left: 1.5rem; z-index: 8000;
+      width: 52px; height: 52px; background: #25D366;
+      color: #fff; font-size: 1.5rem;
+      box-shadow: 0 4px 18px rgba(37,211,102,.4);
+      transition: transform .2s;
+    }
+    .wa-btn:hover { transform: scale(1.1); color: #fff; }
+
+    #toast-wrap { position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 9000; }
+    .my-toast {
+      background: var(--dark3); border: 1px solid rgba(201,168,76,.3);
+      color: var(--text); border-radius: 10px; padding: 1rem 1.2rem;
+      min-width: 280px; margin-top: .5rem;
+      animation: slideIn .3s ease-out;
+    }
+    @keyframes slideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    .my-toast .t-head { display: flex; align-items: center; gap: .5rem; font-weight: 600; margin-bottom: .3rem; }
+    .my-toast .t-head i { color: var(--gold); }
+    .my-toast p { margin: 0; font-size: .83rem; color: var(--muted); }
+
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity .55s, transform .55s; }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* ─── MODALES ─── */
+    .modal-content { background: var(--dark2); border: 1px solid rgba(201,168,76,.2); border-radius: var(--radius); }
+    .modal-header { border-bottom: 1px solid rgba(255,255,255,.06); }
+    .modal-footer { border-top: 1px solid rgba(255,255,255,.06); }
+    .btn-close { filter: invert(1) opacity(.5); }
+    .modal-title { font-family: 'Playfair Display', serif; color: var(--gold); }
+    .modal-nota { font-size: .82rem; color: var(--muted); }
+    .svc-img { width: 100%; height: 220px; object-fit: cover; border-radius: 8px; margin-bottom: 1rem; }
+    .svc-chip { padding: .3rem .8rem; border-radius: 6px; font-size: .85rem; }
+    .svc-chip-precio { background: rgba(201,168,76,.12); color: var(--gold); font-weight: 600; }
+    .svc-chip-duracion { background: rgba(255,255,255,.05); color: var(--muted); }
+    .svc-desc { color: var(--muted); font-size: .9rem; line-height: 1.7; }
+    .estrella { font-size: 1.5rem; color: var(--gold); cursor: pointer; }
+
+    /* ─── PREGUNTAS FRECUENTES ─── */
+    #faq .container-lg { max-width: 720px; }
+    .accordion-item { background: var(--card-bg); border: 1px solid rgba(255,255,255,.06); border-radius: var(--radius) !important; margin-bottom: .5rem; }
+    .accordion-button { background: var(--card-bg); color: var(--text); font-weight: 500; border-radius: var(--radius) !important; }
+    .accordion-button:not(.collapsed) { background: rgba(201,168,76,.08); color: var(--gold); box-shadow: none; }
+    .accordion-button::after { filter: invert(1) sepia(1) saturate(2) hue-rotate(10deg); }
+    .accordion-body { background: var(--card-bg); color: var(--muted); font-size: .88rem; line-height: 1.7; }
+  </style>
+</head>
+<body>
+
+<!-- IMÁGENES (carpeta img/): carrusel → 3 fotos "Gemini_Generated_Image_…" · galería → 4 fotos de trabajos
+     + 2 del local · tarjetas de servicios → ver IMAGEN_POR_SERVICIO al inicio del script, al final de este archivo -->
+
+<!-- LOADER -->
+<div id="loader" class="position-fixed top-0 start-0 bottom-0 end-0 d-flex flex-column align-items-center justify-content-center">
+  <i class="bi bi-scissors scissors"></i>
+  <p>Cargando BarberAg…</p>
+</div>
+<div id="read-prog" class="position-fixed top-0 start-0"></div>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg">
+  <div class="container-lg">
+    <a class="navbar-brand" href="#"><i class="bi bi-scissors me-1"></i>Barber<span>Ag</span></a>
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="nav">
+      <ul class="navbar-nav me-auto ms-3">
+        <li class="nav-item"><a class="nav-link active" href="#">Inicio</a></li>
+        <li class="nav-item"><a class="nav-link" href="#servicios">Servicios</a></li>
+        <li class="nav-item"><a class="nav-link" href="#equipo">Barberos</a></li>
+        <li class="nav-item"><a class="nav-link" href="#suscripciones">Planes</a></li>
+        <li class="nav-item"><a class="nav-link" href="#agendar">Agendar</a></li>
+        <li class="nav-item"><a class="nav-link" href="#resenas">Reseñas</a></li>
+      </ul>
+      <div class="d-flex align-items-center gap-3 mt-2 mt-lg-0">
+        <div class="input-group search-wrap">
+          <input type="text" class="form-control form-control-sm" id="searchInput" placeholder="Buscar servicio…">
+          <button onclick="filterServices()"><i class="bi bi-search"></i></button>
+        </div>
+        <div id="navAuthArea" class="d-flex align-items-center gap-2">
+          <button class="btn-outline-gold" onclick="window.location.href='auth.html'">Ingresar</button>
+          <button class="btn-gold" onclick="window.location.href='auth.html?modo=registro'">Reservar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO CAROUSEL -->
+<div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="5000">
+  <div class="carousel-indicators">
+    <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active"></button>
+    <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1"></button>
+    <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2"></button>
+  </div>
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <img src="img/Gemini_Generated_Image_euuqyqeuuqyqeuuq.png" class="d-block w-100" alt="BarberAg Hero 1">
+      <div class="carousel-caption">
+        <div class="label" data-negocio="direccion">Manrique Jardín · Medellín</div>
+        <h2>Tradición y Estilo<br>en un Solo Lugar</h2>
+        <p>Tu espacio exclusivo para cortes clásicos y afeitados tradicionales con el cuidado que mereces.</p>
+        <div class="d-flex gap-3 mt-3">
+          <button class="btn-gold" onclick="window.location.href='auth.html?modo=registro'">Reservar Cita</button>
+          <a href="#servicios" class="btn-outline-gold">Ver Servicios</a>
+        </div>
+      </div>
+    </div>
+    <div class="carousel-item">
+      <img src="img/Gemini_Generated_Image_sophaisophaisoph.png" class="d-block w-100" alt="BarberAg Hero 2">
+      <div class="carousel-caption">
+        <div class="label">Barberos Expertos</div>
+        <h2>Renueva Tu Look<br>Con Los Mejores</h2>
+        <p>Especialistas en degradados perfectos, Wolf Cut y las últimas tendencias de la moda masculina.</p>
+        <div class="d-flex gap-3 mt-3">
+          <a href="#equipo" class="btn-gold">Conocer Barberos</a>
+          <a href="#suscripciones" class="btn-outline-gold">Ver Planes</a>
+        </div>
+      </div>
+    </div>
+    <div class="carousel-item">
+      <img src="img/Gemini_Generated_Image_y0l2zwy0l2zwy0l2.png" class="d-block w-100" alt="BarberAg Hero 3">
+      <div class="carousel-caption">
+        <div class="label">Experiencia Premium</div>
+        <h2>Más Que Un Corte,<br>Una Experiencia</h2>
+        <p>Relájate en un ambiente diseñado para el caballero exigente. Calidad, confort y profesionalismo.</p>
+        <div class="d-flex gap-3 mt-3">
+          <button class="btn-gold" onclick="window.location.href='auth.html?modo=registro'">Agendar Ahora</button>
+          <a href="#resenas" class="btn-outline-gold">Ver Reseñas</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon"></span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+    <span class="carousel-control-next-icon"></span>
+  </button>
+</div>
+
+<!-- ── SERVICIOS ── -->
+<section id="servicios">
+  <div class="container-lg">
+    <div class="d-flex justify-content-between align-items-end section-header reveal">
+      <div>
+        <div class="tag">Catálogo de Servicios</div>
+        <h2>Nuestros Servicios</h2>
+        <p>Elige el servicio que más se adapte a tu estilo. Todos con garantía de satisfacción.</p>
+      </div>
+      <div class="d-flex gap-2">
+        <button class="btn-outline-gold btn-sm filter-btn active" data-filter="all">Todos</button>
+        <button class="btn-outline-gold btn-sm filter-btn" data-filter="corte">Cortes</button>
+        <button class="btn-outline-gold btn-sm filter-btn" data-filter="combo">Combos</button>
+      </div>
+    </div>
+
+    <div class="row g-3" id="servicesGrid"><p class="text-muted">Cargando servicios…</p></div>
+  </div>
+</section>
+
+<hr class="gold-divider">
+
+<!-- ── EQUIPO ── -->
+<section id="equipo" class="pt-0">
+  <div class="container-lg">
+    <div class="section-header text-center reveal">
+      <div class="tag">Nuestro Equipo</div>
+      <h2>Los Maestros del Estilo</h2>
+      <p class="mx-auto">Cada barbero es un artista con años de experiencia y pasión por el oficio.</p>
+    </div>
+    <div class="row g-3" id="teamGrid"><p class="text-muted text-center">Cargando equipo…</p></div>
+  </div>
+</section>
+
+<hr class="gold-divider">
+
+<!-- ── GALERÍA ── -->
+<section class="pt-0">
+  <div class="container-lg">
+    <div class="section-header text-center reveal">
+      <div class="tag">Galería</div>
+      <h2>Nuestros Trabajos</h2>
+    </div>
+    <div class="gallery-grid reveal">
+      <div class="gallery-item">
+        <img src="img/corte con degradado .jpg" alt="Trabajo 1">
+        <div class="overlay"><i class="bi bi-zoom-in"></i></div>
+      </div>
+      <div class="gallery-item">
+        <img src="img/corte + barba jpg.jpg" alt="Trabajo 2">
+        <div class="overlay"><i class="bi bi-zoom-in"></i></div>
+      </div>
+      <div class="gallery-item">
+        <img src="img/wolfcut.jpg" alt="Trabajo 3">
+        <div class="overlay"><i class="bi bi-zoom-in"></i></div>
+      </div>
+      <div class="gallery-item">
+        <img src="img/corte + tinte de pelo .jpeg" alt="Trabajo 4">
+        <div class="overlay"><i class="bi bi-zoom-in"></i></div>
+      </div>
+      <div class="gallery-item">
+        <img src="img/Gemini_Generated_Image_euuqyqeuuqyqeuuq.png" alt="Local 1">
+        <div class="overlay"><i class="bi bi-zoom-in"></i></div>
+      </div>
+      <div class="gallery-item">
+        <img src="img/Gemini_Generated_Image_sophaisophaisoph.png" alt="Local 2">
+        <div class="overlay"><i class="bi bi-zoom-in"></i></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="gold-divider">
+
+<!-- ── SUSCRIPCIONES ── -->
+<section id="suscripciones" class="pt-0">
+  <div class="container-lg">
+    <div class="section-header text-center reveal">
+      <div class="tag">Planes de Membresía</div>
+      <h2>Suscripciones para Clientes Frecuentes</h2>
+      <p class="mx-auto">Ahorra y accede a beneficios exclusivos con nuestros planes mensuales.</p>
+    </div>
+    <div class="row g-3 justify-content-center" id="plansGrid"><p class="text-muted text-center">Cargando planes…</p></div>
+  </div>
+</section>
+
+<!-- ── AGENDAR ── -->
+<section id="agendar">
+  <div class="container-lg">
+    <div class="booking-grid">
+      <div class="booking-info reveal">
+        <div class="tag">Reserva Tu Cita</div>
+        <h2>Agenda Online,<br>Sin Esperas</h2>
+        <p>Reserva tu cita en minutos desde cualquier dispositivo. Elige tu barbero, servicio y horario favorito. Recibirás confirmación inmediata y recordatorios automáticos.</p>
+        <div class="mt-3">
+          <div class="contact-item"><i class="bi bi-geo-alt-fill"></i><span data-negocio="direccion">Barrio Manrique Jardín, Medellín</span></div>
+          <div class="contact-item"><i class="bi bi-clock-fill"></i><span id="horarioNegocio">Consulta nuestros horarios</span></div>
+          <div class="contact-item"><i class="bi bi-whatsapp"></i><span data-negocio="telefono">+57 300 000 0000</span></div>
+          <div class="contact-item"><i class="bi bi-envelope-fill"></i>hola@barberag.co</div>
+        </div>
+        <div class="d-flex gap-3 mt-3">
+          <div class="info-chip">
+            <div class="code">RF-01</div>
+            <div class="desc">Agendado por admin o cliente</div>
+          </div>
+          <div class="info-chip">
+            <div class="code">RF-05</div>
+            <div class="desc">Confirmación automática</div>
+          </div>
+          <div class="info-chip">
+            <div class="code">RF-24</div>
+            <div class="desc">Recordatorios automáticos</div>
+          </div>
+        </div>
+      </div>
+      <div class="booking-form-wrap reveal">
+        <h5 class="text-gold mb-4">Reservar Cita</h5>
+        <div class="mb-3 aviso" id="bookLoginNotice" style="display:none">
+          Debes <a href="auth.html" class="text-gold">iniciar sesión</a> para agendar una cita.
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Servicio</label>
+          <select class="form-select" id="bookService">
+            <option value="">Cargando servicios…</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Barbero</label>
+          <select class="form-select" id="bookBarber">
+            <option value="">Cargando barberos…</option>
+          </select>
+        </div>
+        <div class="row g-2 mb-3">
+          <div class="col-6">
+            <label class="form-label">Fecha</label>
+            <input type="date" class="form-control" id="bookDate">
+          </div>
+          <div class="col-6">
+            <label class="form-label">Hora</label>
+            <select class="form-select" id="bookTime">
+              <option value="">Elige servicio, barbero y fecha primero</option>
+            </select>
+          </div>
+        </div>
+        <div class="mb-3 aviso aviso-error" id="bookErrorBox" style="display:none"></div>
+        <button class="btn-gold w-100 py-2" id="bookSubmitBtn" onclick="submitBooking()">
+          <i class="bi bi-calendar-check me-2"></i>Confirmar Reserva
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── RESEÑAS ── -->
+<section id="resenas">
+  <div class="container-lg">
+    <div class="d-flex justify-content-between align-items-end section-header reveal">
+      <div>
+        <div class="tag">Testimonios</div>
+        <h2>Lo Que Dicen Nuestros Clientes</h2>
+      </div>
+      <button class="btn-outline-gold" data-bs-toggle="modal" data-bs-target="#reviewModal">
+        <i class="bi bi-pencil-square me-1"></i>Dejar Reseña
+      </button>
+    </div>
+    <div class="row g-3" id="reviewsGrid"><p class="text-muted">Cargando reseñas…</p></div>
+  </div>
+</section>
+
+<!-- ── FAQ ── -->
+<section id="faq">
+  <div class="container-lg">
+    <div class="section-header text-center reveal">
+      <div class="tag">Preguntas Frecuentes</div>
+      <h2>¿Tienes Dudas?</h2>
+    </div>
+    <div class="accordion" id="faqAccordion">
+      <div class="accordion-item reveal">
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+            ¿Puedo cancelar o modificar mi cita?
+          </button>
+        </h2>
+        <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+          <div class="accordion-body">Sí, puedes cancelar o modificar tu cita directamente desde la plataforma con tu cuenta. Las cancelaciones registran el motivo para mantener trazabilidad (RF-17, RF-18). Puedes también cambiar el barbero, hora o servicio sujeto a disponibilidad (RF-13).</div>
+        </div>
+      </div>
+      <div class="accordion-item reveal">
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+            ¿Cómo funcionan las suscripciones?
+          </button>
+        </h2>
+        <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+          <div class="accordion-body">Los planes mensuales se activan una vez confirmado el pago (RF-71). Recibirás notificación de activación (RF-72) y un aviso 3 días antes de que venza tu plan (RF-76). Puedes renovar, pausar o cancelar desde tu perfil (RF-78).</div>
+        </div>
+      </div>
+      <div class="accordion-item reveal">
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+            ¿Qué métodos de pago aceptan?
+          </button>
+        </h2>
+        <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+          <div class="accordion-body">Aceptamos transferencias bancarias, Nequi, Daviplata y tarjetas débito/crédito. El sistema valida que el monto coincida con el precio del servicio (RF-58) y genera comprobante automático al confirmar el pago (RF-60).</div>
+        </div>
+      </div>
+      <div class="accordion-item reveal">
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+            ¿Puedo elegir mi barbero?
+          </button>
+        </h2>
+        <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+          <div class="accordion-body">Sí, al agendar tu cita puedes seleccionar el barbero de tu preferencia siempre que esté activo y tenga disponibilidad en el horario elegido (RF-04, RN-04). También puedes ver los barberos disponibles para cada servicio en el catálogo (RF-39).</div>
+        </div>
+      </div>
+      <div class="accordion-item reveal">
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq5">
+            ¿Cómo dejo una reseña?
+          </button>
+        </h2>
+        <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+          <div class="accordion-body">Después de completar tu cita, podrás calificar al barbero con una puntuación del 1 al 5 y dejar un comentario (RF-80). Solo los clientes que hayan completado la cita pueden dejar reseña para garantizar autenticidad (RN-80). Puedes editar tu reseña dentro del plazo permitido (RF-82).</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer class="py-5">
+  <div class="container-lg">
+    <div class="row g-4">
+      <div class="col-lg-4">
+        <div class="footer-logo mb-2">
+          <i class="bi bi-scissors me-1"></i>BarberAg
+        </div>
+        <p>Tu barbería de confianza en <span data-negocio="direccion">Manrique Jardín, Medellín</span>. Tradición, estilo y profesionalismo desde 2011.</p>
+        <div class="social-links">
+          <a href="#"><i class="bi bi-instagram"></i></a>
+          <a href="#"><i class="bi bi-facebook"></i></a>
+          <a href="#"><i class="bi bi-whatsapp"></i></a>
+          <a href="#"><i class="bi bi-tiktok"></i></a>
+        </div>
+      </div>
+      <div class="col-6 col-lg-2">
+        <h5>Navegación</h5>
+        <a href="#">Inicio</a>
+        <a href="#servicios">Servicios</a>
+        <a href="#equipo">Barberos</a>
+        <a href="#suscripciones">Planes</a>
+        <a href="#agendar">Agendar</a>
+        <a href="#resenas">Reseñas</a>
+      </div>
+      <div class="col-6 col-lg-2">
+        <h5>Servicios</h5>
+        <a href="#">Corte Degradado</a>
+        <a href="#">Corte + Barba</a>
+        <a href="#">Wolf Cut</a>
+        <a href="#">Afeitado Clásico</a>
+        <a href="#">Pack Eventos</a>
+      </div>
+      <div class="col-lg-4">
+        <h5>Contacto</h5>
+        <p><i class="bi bi-geo-alt text-gold me-2"></i><span data-negocio="direccion">Barrio Manrique Jardín, Medellín</span></p>
+        <p><i class="bi bi-clock text-gold me-2"></i>Lun–Sáb: 8am–8pm · Dom: 10am–5pm</p>
+        <p><i class="bi bi-telephone text-gold me-2"></i><span data-negocio="telefono">+57 300 000 0000</span></p>
+        <p><i class="bi bi-envelope text-gold me-2"></i>hola@barberag.co</p>
+      </div>
+    </div>
+    <hr class="footer-hr">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+      <p class="mb-0 footer-copy">&copy; 2026 BarberAg. Todos los derechos reservados.</p>
+      <p class="mb-0 footer-legal">
+        <a href="legal.html#politica">Política de tratamiento de datos</a>
+        · <a href="legal.html#terminos">Términos y condiciones</a>
+      </p>
+    </div>
+  </div>
+</footer>
+
+<!-- BACK TO TOP -->
+<div id="btt" class="position-fixed d-flex align-items-center justify-content-center rounded-circle" onclick="window.scrollTo({top:0,behavior:'smooth'})"><i class="bi bi-arrow-up"></i></div>
+
+<!-- WA BUTTON -->
+<a href="https://wa.me/573000000000" target="_blank" class="wa-btn position-fixed d-flex align-items-center justify-content-center rounded-circle"><i class="bi bi-whatsapp"></i></a>
+
+<!-- TOAST -->
+<div id="toast-wrap"></div>
+
+<!-- SERVICE MODAL -->
+<div class="modal fade" id="serviceModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="svcTitle"></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <img id="svcImg" class="svc-img" src="" alt="">
+        <div class="d-flex gap-3 mb-3">
+          <span class="svc-chip svc-chip-precio" id="svcPrice"></span>
+          <span class="svc-chip svc-chip-duracion" id="svcDur"></span>
+        </div>
+        <p id="svcDesc" class="svc-desc"></p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-gold px-4" data-bs-dismiss="modal" onclick="window.location.href='auth.html?modo=registro'">
+          <i class="bi bi-calendar-plus me-1"></i>Reservar Este Servicio
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- REVIEW MODAL -->
+<div class="modal fade" id="reviewModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="bi bi-star me-2"></i>Dejar Reseña</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body p-4">
+        <p class="modal-nota">Solo clientes con cita completada pueden dejar reseña (RF-80, RN-80).</p>
+        <div class="mb-3">
+          <label class="form-label">Cita a reseñar</label>
+          <select class="form-select" id="reviewCitaSelect">
+            <option value="">Cargando tus citas completadas…</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Calificación</label>
+          <div class="d-flex gap-2" id="starRating">
+            <i class="bi bi-star-fill estrella" data-val="1"></i>
+            <i class="bi bi-star-fill estrella" data-val="2"></i>
+            <i class="bi bi-star-fill estrella" data-val="3"></i>
+            <i class="bi bi-star-fill estrella" data-val="4"></i>
+            <i class="bi bi-star-fill estrella" data-val="5"></i>
+          </div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Comentario</label>
+          <textarea class="form-control" rows="3" placeholder="Cuéntanos tu experiencia…" id="reviewText"></textarea>
+        </div>
+        <button class="btn-gold w-100" onclick="submitReview()">
+          <i class="bi bi-send me-2"></i>Enviar Reseña
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SCRIPTS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/api.js"></script>
+<script>
+// Lógica de la página pública. Depende de js/api.js (Sesion, apiFetch, formatos y helpers compartidos).
+// Orden: recursos → efectos → negocio y sesión → servicios → equipo/planes/reseñas →
+//        reserva → dejar reseña → arranque
+
+// ═══════════════════════════════════════════════
+// RECURSOS Y HELPERS
+// ═══════════════════════════════════════════════
+// Foto de cada servicio según su nombre (las imágenes están en la carpeta img/).
+// Para un servicio nuevo con foto propia, agrega una línea aquí.
+const IMAGEN_POR_SERVICIO = [
+  [/barba/i,       'img/corte + barba jpg.jpg'],
+  [/tinte/i,       'img/corte + tinte de pelo .jpeg'],
+  [/wolf/i,        'img/wolfcut.jpg'],
+  [/degrad|fade/i, 'img/corte con degradado .jpg'],
+];
+const IMAGEN_SERVICIO_POR_DEFECTO = 'img/Gemini_Generated_Image_euuqyqeuuqyqeuuq.png';
+const imagenServicio = (nombre) => (IMAGEN_POR_SERVICIO.find(([patron]) => patron.test(nombre)) || [0, IMAGEN_SERVICIO_POR_DEFECTO])[1];
+
+const dinero = (n) => Number(n).toLocaleString('es-CO');
+
+// Aviso emergente propio de esta página (estilo .my-toast); reemplaza al showToast de api.js
+function showToast(title, msg) {
+  const wrap = document.getElementById('toast-wrap');
+  const t = document.createElement('div');
+  t.className = 'my-toast';
+  t.innerHTML = `<div class="t-head"><i class="bi bi-check-circle-fill"></i>${title}</div><p>${msg}</p>`;
+  wrap.appendChild(t);
+  setTimeout(() => t.remove(), 4000);
+}
+
+// ═══════════════════════════════════════════════
+// EFECTOS DE LA PÁGINA (loader, aparición al hacer scroll, barra de lectura, menú activo)
+// ═══════════════════════════════════════════════
+function iniciarLoader() {
+  window.addEventListener('load', () => {
+    setTimeout(() => document.getElementById('loader').classList.add('fade'), 800);
+  });
+}
+
+function iniciarAparicionAlScroll() {
+  const observador = new IntersectionObserver((entradas) => {
+    entradas.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => observador.observe(el));
+}
+
+// Un solo listener de scroll: barra de lectura, botón "subir" y enlace activo del menú
+const SECCIONES_MENU = ['servicios', 'equipo', 'suscripciones', 'agendar', 'resenas'];
+
+function alHacerScroll() {
+  const porcentaje = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+  document.getElementById('read-prog').style.width = porcentaje + '%';
+  document.getElementById('btt').classList.toggle('show', window.scrollY > 400);
+
+  const posicion = window.scrollY + 100;
+  SECCIONES_MENU.forEach(id => {
+    const seccion = document.getElementById(id);
+    const enlace = document.querySelector(`.nav-link[href="#${id}"]`);
+    if (!seccion || !enlace) return;
+    if (posicion >= seccion.offsetTop && posicion < seccion.offsetTop + seccion.offsetHeight) {
+      document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+      enlace.classList.add('active');
+    }
+  });
+}
+
+// ═══════════════════════════════════════════════
+// DATOS DEL NEGOCIO Y SESIÓN EN EL MENÚ
+// ═══════════════════════════════════════════════
+// Nombre, dirección y horarios vienen de la API (panel admin → Configuración),
+// así este mismo sitio sirve para cualquier barbería sin editar el HTML.
+function cargarDatosNegocio() {
+  cargarConfiguracionNegocio().then((c) => {
+    if (!c) return;
+    if (c.nombre_negocio && c.direccion) document.title = `${c.nombre_negocio} – ${c.direccion}`;
+    if (c.horario_lun_vie) {
+      document.getElementById('horarioNegocio').textContent =
+        `Lun–Vie: ${c.horario_lun_vie} · Sáb: ${c.horario_sabado} · Dom: ${c.horario_domingo}`;
+    }
+  });
+}
+
+function pintarSesionNavbar() {
+  const usuario = Sesion.usuario;
+  if (!usuario || !Sesion.token) return; // sin sesión se deja "Ingresar / Reservar" del HTML
+  const inicial = (usuario.nombre || '?').trim().charAt(0).toUpperCase();
+  document.getElementById('navAuthArea').innerHTML = `
+    <a href="cliente.html" class="btn-outline-gold"><i class="bi bi-calendar2-check me-1"></i>Mis citas</a>
+    <div class="dropdown">
+      <button class="btn-gold dropdown-toggle nav-user" data-bs-toggle="dropdown">
+        <span class="nav-avatar">${inicial}</span>
+        ${escapeHtml(usuario.nombre || '')}
+      </button>
+      <ul class="dropdown-menu dropdown-menu-end">
+        <li><a class="dropdown-item" href="cliente.html">Mi cuenta</a></li>
+        <li><a class="dropdown-item" href="#" onclick="Sesion.cerrar(); return false;">Cerrar sesión</a></li>
+      </ul>
+    </div>`;
+}
+
+// ═══════════════════════════════════════════════
+// SERVICIOS (catálogo, filtro, búsqueda y ventana de detalle)
+// ═══════════════════════════════════════════════
+let serviciosCatalogo = [];
+
+async function cargarServicios() {
+  try { serviciosCatalogo = await apiFetch('/servicios?activos=1'); pintarServicios(serviciosCatalogo); }
+  catch (err) { document.getElementById('servicesGrid').innerHTML = '<p class="text-muted">No se pudieron cargar los servicios.</p>'; }
+}
+
+function pintarServicios(lista) {
+  const grid = document.getElementById('servicesGrid');
+  if (!lista.length) { grid.innerHTML = '<p class="text-muted">No hay servicios disponibles por ahora.</p>'; return; }
+  grid.innerHTML = lista.map(s => `
+    <div class="col-12 col-sm-6 col-lg-3 reveal visible service-item" data-category="${/\+|combo|pack/i.test(s.nombre) ? 'combo' : 'corte'}">
+      <div class="service-card h-100 overflow-hidden" onclick="verServicio(${s.id_servicio})">
+        <div class="position-relative overflow-hidden"><img src="${imagenServicio(s.nombre)}" alt="${escapeHtml(s.nombre)}"><span class="price-tag position-absolute">$${dinero(s.precio)}</span></div>
+        <div class="body">
+          <h5>${escapeHtml(s.nombre)}</h5>
+          <div class="meta d-flex gap-3 mb-3"><span><i class="bi bi-clock"></i>${s.duracion_min} min</span></div>
+          <p>${escapeHtml(s.descripcion || '')}</p>
+          <button class="btn-gold w-100" onclick="event.stopPropagation(); reservarServicio(${s.id_servicio})">Reservar</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+// Filtro por categoría (botones Todos / Cortes / Combos)
+function iniciarFiltroServicios() {
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const filtro = btn.dataset.filter;
+      document.querySelectorAll('.service-item').forEach(item => {
+        item.style.display = (filtro === 'all' || item.dataset.category === filtro) ? 'block' : 'none';
+      });
+    });
+  });
+}
+
+// Buscador de la barra superior
+function filterServices() {
+  const texto = document.getElementById('searchInput').value.toLowerCase();
+  document.querySelectorAll('.service-item').forEach(item => {
+    item.style.display = item.querySelector('h5').textContent.toLowerCase().includes(texto) ? 'block' : 'none';
+  });
+}
+
+function verServicio(id) {
+  const s = serviciosCatalogo.find(x => x.id_servicio === id);
+  if (s) abrirDetalleServicio(s.nombre, s.descripcion || '', dinero(s.precio), s.duracion_min + ' min', imagenServicio(s.nombre));
+}
+
+function abrirDetalleServicio(titulo, descripcion, precio, duracion, imagen) {
+  document.getElementById('svcTitle').textContent = titulo;
+  document.getElementById('svcDesc').textContent = descripcion;
+  document.getElementById('svcPrice').textContent = '$' + precio;
+  document.getElementById('svcDur').innerHTML = '<i class="bi bi-clock me-1"></i>' + duracion;
+  document.getElementById('svcImg').src = imagen;
+  new bootstrap.Modal(document.getElementById('serviceModal')).show();
+}
+
+// "Reservar" en una tarjeta: lleva el servicio al formulario de reserva (la sesión se pide al confirmar)
+function reservarServicio(id) {
+  document.getElementById('bookService').value = id;
+  actualizarHorasDisponibles();
+  document.getElementById('agendar').scrollIntoView({ behavior: 'smooth' });
+}
+
+// ═══════════════════════════════════════════════
+// EQUIPO, PLANES Y RESEÑAS PÚBLICAS
+// ═══════════════════════════════════════════════
+async function cargarEquipo() {
+  const grid = document.getElementById('teamGrid');
+  try {
+    const lista = await apiFetch('/barberos/publicos');
+    if (!lista.length) { grid.innerHTML = '<p class="text-muted text-center">Pronto presentaremos a nuestro equipo.</p>'; return; }
+    grid.innerHTML = lista.map(b => `
+      <div class="col-6 col-md-4 col-lg-3 reveal visible"><div class="team-card text-center">
+        <div class="avatar d-flex align-items-center justify-content-center rounded-circle mx-auto mb-3">${escapeHtml(inicialesDe(b.nombre))}</div>
+        <h5>${escapeHtml(b.nombre)}</h5>
+        <div class="stars">${b.total_resenas ? estrellasTexto(b.calificacion_promedio) + ` <small class="texto-suave">${Number(b.calificacion_promedio).toFixed(1)} (${b.total_resenas})</small>` : '<small class="texto-suave">Aún sin reseñas</small>'}</div>
+        <div class="specialties d-flex flex-wrap justify-content-center">${(b.especialidad || '').split(',').filter(x => x.trim()).map(x => `<span>${escapeHtml(x.trim())}</span>`).join('')}</div>
+      </div></div>`).join('');
+  } catch (err) { grid.innerHTML = '<p class="text-muted text-center">No se pudo cargar el equipo.</p>'; }
+}
+
+async function cargarPlanes() {
+  const grid = document.getElementById('plansGrid');
+  try {
+    const planes = await apiFetch('/planes');
+    if (!planes.length) { grid.innerHTML = '<p class="text-muted text-center">No hay planes disponibles por ahora.</p>'; return; }
+    grid.innerHTML = planes.map(p => `
+      <div class="col-md-4 reveal visible"><div class="plan-card h-100 position-relative">
+        <div class="plan-name">${escapeHtml(p.nombre)}</div>
+        <div class="price mt-2">$${dinero(p.precio)}<sub>/${p.duracion_dias} días</sub></div>
+        <p class="plan-desc">${escapeHtml(p.descripcion || '')}</p>
+        <button class="btn-outline-gold w-100 mt-auto" onclick="elegirPlan()">Elegir Plan</button>
+      </div></div>`).join('');
+  } catch (err) { grid.innerHTML = '<p class="text-muted text-center">No se pudieron cargar los planes.</p>'; }
+}
+
+// Los planes se contratan desde el panel del cliente (sección Membresía)
+function elegirPlan() {
+  const u = Sesion.usuario;
+  window.location.href = Sesion.token && u ? (u.rol === 'cliente' ? 'cliente.html#membresia' : { administrador: 'admin.html', barbero: 'barbero.html' }[u.rol]) : 'auth.html?modo=registro';
+}
+
+async function cargarResenasPublicas() {
+  const grid = document.getElementById('reviewsGrid');
+  try {
+    const lista = await apiFetch('/resenas/publicas');
+    if (!lista.length) { grid.innerHTML = '<p class="text-muted">Aún no hay reseñas. ¡Sé el primero en calificar a tu barbero!</p>'; return; }
+    grid.innerHTML = lista.map(r => `
+      <div class="col-md-4 reveal visible"><div class="review-card">
+        <div class="reviewer d-flex align-items-center"><div class="av d-flex align-items-center justify-content-center rounded-circle">${escapeHtml(inicialesDe(r.cliente_nombre))}</div>
+          <div><div class="name">${escapeHtml(r.cliente_nombre)}</div><div class="date">${formatoFecha(r.fecha)} · con ${escapeHtml(r.barbero_nombre)}</div></div></div>
+        <div class="stars">${estrellasTexto(r.calificacion)}</div>
+        <p>${escapeHtml(r.comentario || 'Sin comentario.')}</p>
+      </div></div>`).join('');
+  } catch (err) { grid.innerHTML = '<p class="text-muted">No se pudieron cargar las reseñas.</p>'; }
+}
+
+// ═══════════════════════════════════════════════
+// RESERVA DE CITA (formulario conectado a la API)
+// ═══════════════════════════════════════════════
+async function cargarDatosReserva() {
+  const selServicio = document.getElementById('bookService');
+  const selBarbero = document.getElementById('bookBarber');
+
+  try {
+    const servicios = await apiFetch('/servicios?activos=1');
+    selServicio.innerHTML = '<option value="">Selecciona un servicio…</option>' +
+      servicios.map(s => `<option value="${s.id_servicio}">${escapeHtml(s.nombre)} – $${dinero(s.precio)}</option>`).join('');
+  } catch (err) {
+    selServicio.innerHTML = '<option value="">No se pudieron cargar los servicios</option>';
+  }
+
+  // Los barberos son públicos: se ven sin sesión; solo reservar exige iniciar sesión
+  if (!Sesion.token || !Sesion.usuario) document.getElementById('bookLoginNotice').style.display = 'block';
+  try {
+    const barberos = await apiFetch('/barberos/publicos');
+    selBarbero.innerHTML = '<option value="">Selecciona un barbero…</option>' +
+      barberos.filter(b => b.disponible).map(b => `<option value="${b.id_usuario}">${escapeHtml(b.nombre)}${b.especialidad ? ' – ' + escapeHtml(b.especialidad) : ''}</option>`).join('');
+  } catch (err) {
+    selBarbero.innerHTML = '<option value="">No se pudieron cargar los barberos</option>';
+  }
+}
+
+async function actualizarHorasDisponibles() {
+  const selHora = document.getElementById('bookTime');
+  const idServicio = document.getElementById('bookService').value;
+  const idBarbero = document.getElementById('bookBarber').value;
+  const fecha = document.getElementById('bookDate').value;
+
+  if (!idServicio || !idBarbero || !fecha) {
+    selHora.innerHTML = '<option value="">Elige servicio, barbero y fecha primero</option>';
+    return;
+  }
+  selHora.innerHTML = '<option value="">Consultando disponibilidad…</option>';
+  try {
+    const slots = await apiFetch(`/citas/disponibilidad?id_barbero=${idBarbero}&fecha=${fecha}&id_servicio=${idServicio}`);
+    if (!slots.length) {
+      selHora.innerHTML = '<option value="">Sin horarios disponibles ese día</option>';
+      return;
+    }
+    selHora.innerHTML = '<option value="">Selecciona una hora…</option>' +
+      slots.map(s => `<option value="${s.hora_inicio}">${s.hora_inicio.slice(0, 5)}</option>`).join('');
+  } catch (err) {
+    selHora.innerHTML = `<option value="">${escapeHtml(err.mensaje || 'No se pudo consultar disponibilidad')}</option>`;
+  }
+}
+
+async function submitBooking() {
+  const errorBox = document.getElementById('bookErrorBox');
+  errorBox.style.display = 'none';
+
+  if (!Sesion.token || !Sesion.usuario) {
+    window.location.href = 'auth.html';
+    return;
+  }
+
+  const id_servicio = document.getElementById('bookService').value;
+  const id_barbero = document.getElementById('bookBarber').value;
+  const fecha = document.getElementById('bookDate').value;
+  const hora_inicio = document.getElementById('bookTime').value;
+
+  if (!id_servicio || !id_barbero || !fecha || !hora_inicio) {
+    errorBox.textContent = 'Completa servicio, barbero, fecha y hora.';
+    errorBox.style.display = 'block';
+    return;
+  }
+
+  const btn = document.getElementById('bookSubmitBtn');
+  btn.disabled = true;
+  btn.textContent = 'Reservando…';
+
+  try {
+    await apiFetch('/citas', {
+      method: 'POST',
+      body: JSON.stringify({ id_barbero, id_servicio, fecha, hora_inicio }),
+    });
+    showToast('¡Cita Reservada! ✓', 'Tu cita ha sido registrada. Puedes verla en "Mis citas".');
+    document.getElementById('bookDate').value = '';
+    document.getElementById('bookTime').innerHTML = '<option value="">Elige servicio, barbero y fecha primero</option>';
+  } catch (err) {
+    actualizarHorasDisponibles(); // si el horario se ocupó, se refresca la lista
+    errorBox.textContent = err.mensaje || 'No se pudo registrar la cita.';
+    errorBox.style.display = 'block';
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="bi bi-calendar-check me-2"></i>Confirmar Reserva';
+  }
+}
+
+function iniciarFormularioReserva() {
+  ['bookService', 'bookBarber', 'bookDate'].forEach(id =>
+    document.getElementById(id).addEventListener('change', actualizarHorasDisponibles));
+  // Solo se puede reservar en el mes actual o el siguiente
+  document.querySelectorAll('input[type="date"]').forEach(i => { i.min = hoyLocal(); i.max = finMesSiguiente(); });
+  cargarDatosReserva();
+}
+
+// ═══════════════════════════════════════════════
+// DEJAR UNA RESEÑA (ventana modal, conectada a la API)
+// ═══════════════════════════════════════════════
+let estrellaSeleccionadaIndex = 0;
+
+async function cargarCitasParaResena() {
+  const sel = document.getElementById('reviewCitaSelect');
+  if (!Sesion.token || !Sesion.usuario) {
+    sel.innerHTML = '<option value="">Inicia sesión para dejar una reseña</option>';
+    return;
+  }
+  try {
+    const [citas, resenas] = await Promise.all([apiFetch('/citas/mias'), apiFetch('/resenas/mias')]);
+    const yaResenadas = new Set(resenas.map(r => r.id_cita));
+    const pendientes = citas.filter(c => c.estado === 'completada' && !yaResenadas.has(c.id_cita));
+    if (!pendientes.length) {
+      sel.innerHTML = '<option value="">No tienes citas completadas pendientes de reseñar</option>';
+      return;
+    }
+    sel.innerHTML = '<option value="">Selecciona una cita…</option>' +
+      pendientes.map(c => `<option value="${c.id_cita}">${formatoFecha(c.fecha)} – ${escapeHtml(c.servicio_nombre)} con ${escapeHtml(c.barbero_nombre)}</option>`).join('');
+  } catch (err) {
+    sel.innerHTML = '<option value="">No se pudieron cargar tus citas</option>';
+  }
+}
+
+function submitReview() {
+  const idCita = document.getElementById('reviewCitaSelect').value;
+  const txt = document.getElementById('reviewText').value;
+  const calificacion = estrellaSeleccionadaIndex;
+  if (!idCita) { showToast('Falta seleccionar', 'Elige qué cita quieres reseñar.'); return; }
+  if (!calificacion) { showToast('Falta calificación', 'Selecciona de 1 a 5 estrellas.'); return; }
+
+  apiFetch('/resenas', {
+    method: 'POST',
+    body: JSON.stringify({ id_cita: idCita, calificacion, comentario: txt || null }),
+  }).then(() => {
+    showToast('Reseña enviada ✓', 'Gracias por compartir tu experiencia.');
+    bootstrap.Modal.getInstance(document.getElementById('reviewModal')).hide();
+    document.getElementById('reviewText').value = '';
+    cargarCitasParaResena();
+  }).catch(err => {
+    showToast('No se pudo enviar', err.mensaje || 'Ocurrió un error al registrar tu reseña.');
+  });
+}
+
+function iniciarResenas() {
+  document.querySelectorAll('#starRating i').forEach(star => {
+    star.addEventListener('click', () => {
+      estrellaSeleccionadaIndex = Number(star.dataset.val);
+      document.querySelectorAll('#starRating i').forEach(s => {
+        s.style.opacity = Number(s.dataset.val) <= estrellaSeleccionadaIndex ? '1' : '.35';
+      });
+    });
+  });
+  document.getElementById('reviewModal').addEventListener('show.bs.modal', cargarCitasParaResena);
+}
+
+// ═══════════════════════════════════════════════
+// ARRANQUE DE LA PÁGINA
+// ═══════════════════════════════════════════════
+iniciarLoader();
+iniciarAparicionAlScroll();
+window.addEventListener('scroll', alHacerScroll);
+
+cargarDatosNegocio();
+pintarSesionNavbar();
+
+iniciarFiltroServicios();
+document.getElementById('searchInput').addEventListener('input', filterServices);
+iniciarFormularioReserva();
+iniciarResenas();
+
+cargarServicios();
+cargarEquipo();
+cargarPlanes();
+cargarResenasPublicas();
+</script>
+</body>
+</html>

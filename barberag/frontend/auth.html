@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title id="pageTitleTag">BarberAg</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body class="auth-body">
+
+<!-- ═══════ LOGIN (?modo=login, por defecto) ═══════ -->
+<div class="card-box" id="modo-login" style="display:none">
+  <div class="logo">Barber<span>Ag</span></div>
+  <div class="subtitle">Inicia sesión para continuar · <span data-negocio="nombre_negocio">BarberAg</span></div>
+  <div class="error-box" id="loginErrorBox"></div>
+  <form id="loginForm">
+    <div class="mb-3">
+      <label class="form-label">Correo</label>
+      <input type="email" class="form-control" id="loginCorreo" placeholder="tu@correo.com" required>
+    </div>
+    <div class="mb-4">
+      <label class="form-label">Contraseña</label>
+      <input type="password" class="form-control" id="loginContrasena" placeholder="••••••••" required>
+    </div>
+    <button class="btn-gold" type="submit" id="loginSubmitBtn">Ingresar</button>
+  </form>
+  <div class="demo-note">
+    Cuentas de prueba (contraseña: <b>barberag123</b>)<br>
+    Admin: <b>jorge.agudelo@barberag.com</b><br>
+    Barbero: <b>carlos.munoz@barberag.com</b><br>
+    Cliente: <b>andres.ruiz@mail.com</b>
+  </div>
+  <div class="demo-note" style="margin-top:1rem">
+    ¿Eres cliente y no tienes cuenta? <a href="auth.html?modo=registro" style="color:var(--gold)">Regístrate aquí</a>
+  </div>
+</div>
+
+<!-- ═══════ REGISTRO (?modo=registro) ═══════ -->
+<div class="card-box" id="modo-registro" style="display:none">
+  <div class="logo">Barber<span>Ag</span></div>
+  <div class="subtitle">Crea tu cuenta para agendar citas · <span data-negocio="nombre_negocio">BarberAg</span></div>
+  <div class="error-box" id="registroErrorBox"></div>
+  <form id="registroForm">
+    <div class="mb-3">
+      <label class="form-label">Nombre completo</label>
+      <input type="text" class="form-control" id="regNombre" placeholder="Tu nombre" required minlength="3">
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Correo</label>
+      <input type="email" class="form-control" id="regCorreo" placeholder="tu@correo.com" required>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Teléfono</label>
+      <input type="tel" class="form-control" id="regTelefono" placeholder="300 000 0000">
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Contraseña</label>
+      <input type="password" class="form-control" id="regContrasena" placeholder="Mínimo 6 caracteres" required minlength="6">
+    </div>
+    <div class="form-check mb-3">
+      <input class="form-check-input" type="checkbox" id="consentimiento" required>
+      <label class="form-check-label" for="consentimiento" style="font-size:.8rem">
+        Autorizo el tratamiento de mis datos personales conforme a la
+        <a href="legal.html#politica" target="_blank">Política de Tratamiento de Datos</a>
+        y los <a href="legal.html#terminos" target="_blank">Términos y Condiciones</a>.
+      </label>
+    </div>
+    <button class="btn-gold" type="submit" id="registroSubmitBtn">Crear cuenta</button>
+  </form>
+  <div class="login-link">¿Ya tienes cuenta? <a href="auth.html?modo=login">Inicia sesión</a></div>
+</div>
+
+<!-- ═══════ CONFIRMACIÓN DE PAGO (?modo=pago&referencia=...) ═══════ -->
+<div class="card-box" id="modo-pago" style="display:none">
+  <div class="spinner-border mb-3" role="status"></div>
+  <h1 style="font-size:1.3rem">Confirmando tu pago…</h1>
+  <div class="detalle">Estamos verificando el resultado con Wompi. Esto puede tardar unos segundos.</div>
+</div>
+
+<script src="js/api.js"></script>
+<script>
+  const modo = new URLSearchParams(location.search).get("modo") || "login";
+  document.getElementById("modo-" + (["login", "registro", "pago"].includes(modo) ? modo : "login")).style.display = "";
+  document.getElementById("pageTitleTag").textContent = { login: "Iniciar sesión", registro: "Crear cuenta", pago: "Confirmando pago" }[modo] + " – BarberAg";
+  cargarConfiguracionNegocio();
+
+  // ── LOGIN ──
+  if (modo === "login") {
+    if (Sesion.token && Sesion.usuario) {
+      window.location.href = { administrador: "admin.html", barbero: "barbero.html", cliente: "index.html" }[Sesion.usuario.rol] || "auth.html";
+    }
+    const form = document.getElementById("loginForm");
+    const errorBox = document.getElementById("loginErrorBox");
+    const submitBtn = document.getElementById("loginSubmitBtn");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      errorBox.style.display = "none";
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Ingresando...";
+      try {
+        const data = await apiFetch("/auth/login", {
+          method: "POST",
+          body: JSON.stringify({ correo: document.getElementById("loginCorreo").value.trim(), contrasena: document.getElementById("loginContrasena").value }),
+        });
+        Sesion.guardar(data.token, data.usuario);
+        const destino = { administrador: "admin.html", barbero: "barbero.html", cliente: "index.html" }[data.usuario.rol];
+        if (destino) window.location.href = destino;
+        else { errorBox.textContent = "No se pudo determinar tu tipo de cuenta."; errorBox.style.display = "block"; }
+      } catch (err) {
+        errorBox.textContent = err.mensaje || "No se pudo iniciar sesión.";
+        errorBox.style.display = "block";
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Ingresar";
+      }
+    });
+  }
+
+  // ── REGISTRO ──
+  if (modo === "registro") {
+    if (Sesion.token && Sesion.usuario) {
+      window.location.href = Sesion.usuario.rol === "cliente" ? "cliente.html" : (Sesion.usuario.rol === "administrador" ? "admin.html" : "barbero.html");
+    }
+    const form = document.getElementById("registroForm");
+    const errorBox = document.getElementById("registroErrorBox");
+    const submitBtn = document.getElementById("registroSubmitBtn");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      errorBox.style.display = "none";
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Creando cuenta...";
+      try {
+        const data = await apiFetch("/auth/registro", {
+          method: "POST",
+          body: JSON.stringify({
+            nombre: document.getElementById("regNombre").value.trim(),
+            correo: document.getElementById("regCorreo").value.trim(),
+            telefono: document.getElementById("regTelefono").value.trim(),
+            contrasena: document.getElementById("regContrasena").value,
+            acepto_tratamiento_datos: document.getElementById("consentimiento").checked,
+          }),
+        });
+        Sesion.guardar(data.token, data.usuario);
+        window.location.href = "cliente.html";
+      } catch (err) {
+        errorBox.textContent = err.mensaje || "No se pudo crear la cuenta.";
+        errorBox.style.display = "block";
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Crear cuenta";
+      }
+    });
+  }
+
+  // ── CONFIRMACIÓN DE PAGO ──
+  if (modo === "pago") {
+    const params = new URLSearchParams(location.search);
+    const referencia = params.get("referencia"); // "id" lo agrega Wompi solo al redirect-url; no se usa aquí
+    const cont = document.getElementById("modo-pago");
+
+    function mostrar(icono, claseIcono, titulo, detalle) {
+      cont.innerHTML = `
+        <div class="icono ${claseIcono}"><i class="bi ${icono}"></i></div>
+        <h1 style="font-size:1.3rem">${titulo}</h1>
+        <div class="detalle">${detalle}</div>
+        <button class="btn-gold" onclick="window.close(); window.location.href='auth.html'">Volver</button>
+      `;
+    }
+
+    async function verificar(intentos = 0) {
+      if (!referencia) return mostrar("bi-question-circle", "espera", "No se encontró la referencia del pago", "Si crees que esto es un error, contacta a la barbería.");
+      try {
+        // Endpoint público: no depende de que quien pague tenga una sesión iniciada en este navegador.
+        const pago = await apiFetch(`/pagos/estado/${encodeURIComponent(referencia)}`);
+        if (pago.estado === "exitoso") {
+          mostrar("bi-check-circle-fill", "exito", "¡Pago confirmado!", `Se registró correctamente${pago.metodo_pago_wompi ? " vía " + pago.metodo_pago_wompi : ""}. Gracias.`);
+        } else if (pago.estado === "fallido") {
+          mostrar("bi-x-circle-fill", "fallo", "El pago no se pudo completar", "Puedes intentarlo de nuevo desde el panel de administración.");
+        } else if (intentos < 15) {
+          setTimeout(() => verificar(intentos + 1), 2000); // Wompi puede tardar unos segundos en enviar el webhook
+        } else {
+          mostrar("bi-hourglass-split", "espera", "Seguimos esperando la confirmación", "Wompi está tardando más de lo usual. El estado se actualizará solo cuando llegue la confirmación.");
+        }
+      } catch {
+        if (intentos < 15) setTimeout(() => verificar(intentos + 1), 2000);
+        else mostrar("bi-exclamation-triangle", "fallo", "No se pudo verificar el pago", "Revisa tu conexión o contacta a la barbería si el problema persiste.");
+      }
+    }
+    verificar();
+  }
+</script>
+</body>
+</html>

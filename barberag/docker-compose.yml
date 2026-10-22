@@ -1,0 +1,31 @@
+# docker-compose.yml
+# Levanta backend + frontend. La base de datos ya NO se levanta aquí:
+# vive en Supabase (PostgreSQL en la nube), así que solo hace falta
+# tener el DATABASE_URL en backend/.env.
+#
+#   docker compose up -d --build
+#
+# Frontend: http://localhost:8080/auth.html
+# API:      http://localhost:3000/api/health
+
+services:
+  backend:
+    build: ./backend
+    restart: unless-stopped
+    env_file:
+      - ./backend/.env      # aquí va tu DATABASE_URL de Supabase
+    environment:
+      PORT: 3000
+      FRONTEND_URL: http://localhost:8080
+    ports:
+      - "3000:3000"
+
+  frontend:
+    image: nginx:alpine
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "8080:80"
+    volumes:
+      - ./frontend:/usr/share/nginx/html:ro

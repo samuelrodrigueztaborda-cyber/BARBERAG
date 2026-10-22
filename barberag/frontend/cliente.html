@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mi cuenta – BarberAg</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="app-shell">
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div>
+        <div class="logo">Barber<span>Ag</span></div>
+        <div class="panel-tag">Mi cuenta · <span data-negocio="nombre_negocio">BarberAg</span></div>
+      </div>
+      <button class="sidebar-close" id="sidebarClose"><i class="bi bi-x-lg"></i></button>
+    </div>
+    <nav class="sidebar-nav" id="sidebarNav">
+      <a data-target="agendar" data-title="Agendar cita" data-sub="Elige servicio, barbero y horario" class="active"><i class="bi bi-calendar-plus"></i> Agendar cita</a>
+      <a data-target="citas" data-title="Mis citas" data-sub="Tu historial y citas próximas"><i class="bi bi-calendar-week"></i> Mis citas</a>
+      <a data-target="barberos" data-title="Barberos" data-sub="Conoce al equipo y deja tu reseña"><i class="bi bi-person-badge"></i> Barberos</a>
+      <a data-target="membresia" data-title="Membresía y pagos" data-sub="Tu plan, tus pagos y los planes disponibles"><i class="bi bi-credit-card-2-front"></i> Membresía y pagos</a>
+      <a data-target="resenas" data-title="Mis reseñas" data-sub="Reseñas que has dejado"><i class="bi bi-star"></i> Mis reseñas</a>
+      <a data-target="perfil" data-title="Mi perfil" data-sub="Tus datos de contacto"><i class="bi bi-person-circle"></i> Mi perfil</a>
+    </nav>
+    <div class="sidebar-foot">
+      <a href="#" id="logoutLink"><i class="bi bi-box-arrow-left"></i> Cerrar sesión</a>
+    </div>
+  </aside>
+
+  <div class="main-content">
+    <div class="topbar">
+      <div class="d-flex align-items-start gap-3">
+        <button class="mobile-toggle" id="mobileToggle"><i class="bi bi-list"></i></button>
+        <div>
+          <h1 id="pageTitle">Agendar cita</h1>
+          <div class="subtitle" id="pageSub">Cargando…</div>
+        </div>
+      </div>
+      <div class="user-chip">
+        <div class="text-end d-none d-sm-block">
+          <div class="name" id="userChipName">—</div>
+          <div class="role">Cliente</div>
+        </div>
+        <div class="avatar" id="userChipAvatar">—</div>
+      </div>
+    </div>
+
+    <!-- ═══════════ AGENDAR CITA ═══════════ -->
+    <section class="content-section active" id="sec-agendar">
+      <div class="step-row">
+        <div class="step-pill active" id="stepPill1">1. Servicio</div>
+        <div class="step-pill" id="stepPill2">2. Barbero</div>
+        <div class="step-pill" id="stepPill3">3. Fecha y hora</div>
+        <div class="step-pill" id="stepPill4">4. Confirmar</div>
+      </div>
+
+      <div id="pasoServicio">
+        <div class="panel">
+          <div class="panel-head"><h5>Elige un servicio</h5></div>
+          <div id="listaServicios"><div class="text-center text-muted py-4">Cargando servicios…</div></div>
+        </div>
+      </div>
+
+      <div id="pasoBarbero" style="display:none">
+        <div class="panel">
+          <div class="panel-head">
+            <h5>Elige un barbero</h5>
+            <button class="btn-outline-gold btn-sm-gold" onclick="irAPaso(1)">← Cambiar servicio</button>
+          </div>
+          <div id="listaBarberos"><div class="text-center text-muted py-4">Cargando barberos…</div></div>
+        </div>
+      </div>
+
+      <div id="pasoHorario" style="display:none">
+        <div class="panel">
+          <div class="panel-head">
+            <h5>Elige fecha y hora</h5>
+            <button class="btn-outline-gold btn-sm-gold" onclick="irAPaso(2)">← Cambiar barbero</button>
+          </div>
+          <div class="mb-3" style="max-width:220px">
+            <label class="form-label">Fecha</label>
+            <input type="date" class="form-control" id="fechaCita">
+          </div>
+          <div id="slotsContainer"><div class="text-muted" style="font-size:.85rem">Elige una fecha para ver los horarios disponibles.</div></div>
+        </div>
+      </div>
+
+      <div id="pasoConfirmar" style="display:none">
+        <div class="panel">
+          <div class="panel-head">
+            <h5>Confirma tu cita</h5>
+            <button class="btn-outline-gold btn-sm-gold" onclick="irAPaso(3)">← Cambiar horario</button>
+          </div>
+          <div id="resumenCita" class="mb-3"></div>
+          <button class="btn-gold" id="btnConfirmarCita">Confirmar cita</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════ MIS CITAS ═══════════ -->
+    <section class="content-section" id="sec-citas">
+      <div id="listaCitas"><div class="text-center text-muted py-4">Cargando tus citas…</div></div>
+    </section>
+
+    <!-- ═══════════ BARBEROS (ver, elegir y reseñar) ═══════════ -->
+    <section class="content-section" id="sec-barberos">
+      <div class="rf-note">Solo puedes reseñar a un barbero después de una cita <b>completada</b> con él, y una sola vez por cita.</div>
+      <div class="row g-3" id="listaBarberosCliente"><div class="col-12 text-center text-muted py-4">Cargando barberos…</div></div>
+    </section>
+
+    <!-- ═══════════ MEMBRESÍA Y PAGOS ═══════════ -->
+    <section class="content-section" id="sec-membresia">
+      <div class="panel mb-3">
+        <div class="panel-head"><h5>Mi suscripción</h5></div>
+        <div id="miSuscripcion"><div class="text-center text-muted py-3">Cargando…</div></div>
+      </div>
+      <div class="panel mb-3">
+        <div class="panel-head"><h5>Planes disponibles</h5></div>
+        <div class="row g-3" id="listaPlanes"><div class="col-12 text-center text-muted py-3">Cargando planes…</div></div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><h5>Mis pagos</h5></div>
+        <div class="dtable-wrap">
+          <table class="dtable">
+            <thead><tr><th>Fecha</th><th>Concepto</th><th>Monto</th><th>Estado</th></tr></thead>
+            <tbody id="pagosTbody"><tr><td colspan="4" class="text-center text-muted py-3">Cargando pagos…</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════ MIS RESEÑAS ═══════════ -->
+    <section class="content-section" id="sec-resenas">
+      <div id="listaResenas"><div class="text-center text-muted py-4">Cargando tus reseñas…</div></div>
+    </section>
+
+    <!-- ═══════════ MI PERFIL ═══════════ -->
+    <section class="content-section" id="sec-perfil">
+      <div class="panel mb-3" style="max-width:480px">
+        <div class="panel-head"><h5>Mis datos</h5></div>
+        <form id="formPerfilCliente">
+          <div class="mb-3"><label class="form-label">Nombre</label><input class="form-control" id="perfilNombre" required></div>
+          <div class="mb-3"><label class="form-label">Correo</label><input type="email" class="form-control" id="perfilCorreo" required></div>
+          <div class="mb-3"><label class="form-label">Teléfono</label><input class="form-control" id="perfilTelefono"></div>
+          <button class="btn-gold" type="submit">Guardar cambios</button>
+        </form>
+      </div>
+      <div class="panel" style="max-width:480px">
+        <div class="panel-head"><h5>Cambiar contraseña</h5></div>
+        <form id="formPasswordCliente">
+          <div class="mb-3"><label class="form-label">Contraseña actual</label><input type="password" class="form-control" id="passwordActual"></div>
+          <div class="mb-3"><label class="form-label">Nueva contraseña</label><input type="password" class="form-control" id="passwordNueva" placeholder="Mínimo 6 caracteres"></div>
+          <button class="btn-outline-gold" type="submit">Cambiar contraseña</button>
+        </form>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- MODAL RESEÑAR -->
+<div class="modal fade" id="resenarModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Reseña para <span id="resenarBarberoNombre"></span></h5>
+        <button class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <label class="form-label">Cita que estás reseñando</label>
+        <select class="form-select mb-3" id="resenarCitaSelect"></select>
+        <label class="form-label">Calificación</label>
+        <div class="estrellas-input" id="estrellasInput">
+          <i class="bi bi-star-fill" data-valor="1"></i>
+          <i class="bi bi-star-fill" data-valor="2"></i>
+          <i class="bi bi-star-fill" data-valor="3"></i>
+          <i class="bi bi-star-fill" data-valor="4"></i>
+          <i class="bi bi-star-fill" data-valor="5"></i>
+        </div>
+        <label class="form-label">Comentario</label>
+        <textarea class="form-control" id="resenarComentario" rows="3" maxlength="500" placeholder="Cuéntanos tu experiencia (opcional)"></textarea>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-outline-gold" data-bs-dismiss="modal">Cancelar</button>
+        <button class="btn-gold" id="btnEnviarResena">Enviar reseña</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL VER RESEÑAS DE UN BARBERO -->
+<div class="modal fade" id="verResenasModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Reseñas de <span id="verResenasBarbero"></span></h5>
+        <button class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body" id="verResenasLista"></div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL CANCELAR CITA -->
+<div class="modal fade" id="cancelarModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content" style="background:var(--dark2); border:1px solid rgba(201,168,76,.2)">
+      <div class="modal-header" style="border-bottom:1px solid rgba(255,255,255,.06)">
+        <h5 class="modal-title" style="color:var(--gold); font-family:'Playfair Display',serif">Cancelar cita</h5>
+        <button class="btn-close" data-bs-dismiss="modal" style="filter:invert(1) opacity(.5)"></button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="cancelarCitaIdCliente">
+        <label class="form-label">Motivo de la cancelación</label>
+        <textarea class="form-control" id="cancelarMotivoCliente" rows="3" placeholder="Ej: tuve un imprevisto"></textarea>
+      </div>
+      <div class="modal-footer" style="border-top:1px solid rgba(255,255,255,.06)">
+        <button class="btn-outline-gold" data-bs-dismiss="modal">Volver</button>
+        <button class="btn-gold" id="btnConfirmarCancelacion">Confirmar cancelación</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL PAGO -->
+<div class="modal fade" id="pagoModalCliente" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content" style="background:var(--dark2); border:1px solid rgba(201,168,76,.2)">
+      <div class="modal-header" style="border-bottom:1px solid rgba(255,255,255,.06)">
+        <h5 class="modal-title" id="pagoModalTitulo">Pagar</h5>
+        <button class="btn-close" data-bs-dismiss="modal" style="filter:invert(1) opacity(.5)"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3" id="pagoClienteInfo" style="font-weight:600"></div>
+        <div id="pagoClienteWidget" class="text-center"></div>
+        <div id="pagoClienteEstado" class="mt-2"></div>
+      </div>
+      <div class="modal-footer" style="border-top:1px solid rgba(255,255,255,.06)">
+        <button class="btn-outline-gold" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toast-wrap"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/api.js"></script>
+<script src="js/cliente.js"></script>
+</body>
+</html>
