@@ -1,0 +1,20 @@
+# backend/scripts/crontab.ejemplo
+#
+# Ejemplo de tarea programada para respaldar la base de datos todos los
+# días a las 2:00 a.m. (RNF-27: copias diarias, retención de 30 días).
+#
+# CÓMO INSTALARLO en un servidor Linux:
+#   1. Ajusta la ruta de abajo a donde quede instalado el proyecto en tu servidor.
+#   2. Ejecuta:  crontab -e
+#   3. Pega la línea (sin el "#" inicial) y guarda.
+#   4. Verifica que quedó instalada con:  crontab -l
+#
+# El log queda en backend/backups/backup.log — revísalo de vez en cuando
+# para confirmar que los respaldos se siguen generando correctamente.
+
+0 2 * * * /bin/bash /ruta/completa/a/barberag/backend/scripts/backup.sh >> /ruta/completa/a/barberag/backend/backups/backup.log 2>&1
+
+# ── Si tu hosting no te da acceso a cron (ej. algunos planes de hosting gestionado) ──
+# Usa un servicio externo gratuito de "cron job" (como cron-job.org) que llame
+# periódicamente a un endpoint tuyo, o revisa si tu proveedor de hosting
+# (Railway, Render, etc.) ofrece "Scheduled Jobs" / "Cron Jobs" en su panel.
