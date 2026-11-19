@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel de barbero – BarberAg</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="app-shell">
+
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div>
+        <div class="logo">Barber<span>Ag</span></div>
+        <div class="panel-tag">Panel barbero · <span data-negocio="nombre_negocio">BarberAg</span></div>
+      </div>
+      <button class="sidebar-close" id="sidebarClose"><i class="bi bi-x-lg"></i></button>
+    </div>
+    <nav class="sidebar-nav" id="sidebarNav">
+      <a data-target="agenda" data-title="Hola" data-sub="" class="active"><i class="bi bi-calendar-week"></i> Mi agenda</a>
+      <a data-target="disponibilidad" data-title="Disponibilidad" data-sub="Configura tus horarios de atención · RF-22, RF-23"><i class="bi bi-clock-history"></i> Disponibilidad</a>
+      <a data-target="historial" data-title="Historial de citas" data-sub="Citas pasadas y completadas · RF-30"><i class="bi bi-clock"></i> Historial de citas</a>
+      <a data-target="clientes" data-title="Mis clientes" data-sub="Clientes que has atendido · RF-06, RF-27"><i class="bi bi-people"></i> Mis clientes</a>
+      <a data-target="resenas" data-title="Mis reseñas" data-sub="Calificaciones que has recibido"><i class="bi bi-star"></i> Mis reseñas</a>
+      <a data-target="ganancias" data-title="Ganancias" data-sub="Tus ingresos y comisiones · RF-30"><i class="bi bi-cash-coin"></i> Ganancias</a>
+      <a data-target="perfil" data-title="Mi perfil" data-sub="Información personal y profesional"><i class="bi bi-person-circle"></i> Mi perfil</a>
+    </nav>
+    <div class="sidebar-foot">
+      <a href="#" id="logoutLink"><i class="bi bi-box-arrow-left"></i> Cerrar sesión</a>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main-content">
+
+    <div class="topbar">
+      <div class="d-flex align-items-start gap-3">
+        <button class="mobile-toggle" id="mobileToggle"><i class="bi bi-list"></i></button>
+        <div>
+          <h1 id="pageTitle">Hola</h1>
+          <div class="subtitle" id="pageSub">Cargando…</div>
+        </div>
+      </div>
+      <div class="d-flex align-items-center gap-3">
+        <span class="status-pill" id="statusPill"><span class="dot"></span> Disponible ahora</span>
+        <div class="user-chip">
+          <div class="text-end d-none d-sm-block">
+            <div class="name" id="userChipName">—</div>
+            <div class="role">Barbero</div>
+          </div>
+          <div class="avatar" id="userChipAvatar">—</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════ MI AGENDA ═══════════ -->
+    <section class="content-section active" id="sec-agenda">
+      <div class="row g-3 mb-3">
+        <div class="col-6 col-lg-3">
+          <div class="stat-card">
+            <div class="lbl">Citas hoy</div>
+            <div class="val" id="statCitasHoy">—</div>
+            <div class="delta neutral" id="statProximaCita">cargando...</div>
+          </div>
+        </div>
+        <div class="col-6 col-lg-3">
+          <div class="stat-card">
+            <div class="lbl">Ganancias del día</div>
+            <div class="val" id="statGananciasHoy">—</div>
+            <div class="delta neutral">citas completadas hoy</div>
+          </div>
+        </div>
+        <div class="col-6 col-lg-3">
+          <div class="stat-card">
+            <div class="lbl">Calificación</div>
+            <div class="val" id="statCalificacion">—</div>
+            <div class="delta neutral">promedio general</div>
+          </div>
+        </div>
+        <div class="col-6 col-lg-3">
+          <div class="stat-card">
+            <div class="lbl">Clientes totales</div>
+            <div class="val" id="statClientesTotales">—</div>
+            <div class="delta neutral">atendidos en total</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row g-3 mb-3">
+        <div class="col-12">
+          <div class="panel h-100" id="panelPendientes" style="display:none;">
+            <div class="panel-head">
+              <div>
+                <h5>Solicitudes pendientes por confirmar</h5>
+                <div class="rf-tag">RF-08 · RF-09</div>
+              </div>
+            </div>
+            <div class="dtable-wrap">
+              <table class="dtable">
+                <thead><tr><th>Fecha</th><th>Hora</th><th>Cliente</th><th>Servicio</th><th></th></tr></thead>
+                <tbody id="pendientesTbody">
+                  <tr><td colspan="5" class="text-center text-muted py-3">Cargando solicitudes…</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row g-3">
+        <div class="col-lg-8">
+          <div class="panel h-100">
+            <div class="panel-head">
+              <div>
+                <h5>Mi agenda</h5>
+                <div class="rf-tag">RF-06 · RF-08 · RF-09 · RF-22</div>
+              </div>
+              <a class="link" data-goto="historial">Ver semana</a>
+            </div>
+            <div class="dtable-wrap">
+              <table class="dtable">
+                <thead><tr><th>Fecha</th><th>Hora</th><th>Cliente</th><th>Servicio</th><th>Estado</th><th></th></tr></thead>
+                <tbody id="agendaTbody">
+                  <tr><td colspan="5" class="text-center text-muted py-3">Cargando agenda…</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4">
+          <div class="panel mb-3">
+            <div class="panel-head"><h5>Disponibilidad</h5></div>
+            <div id="dashDisponibilidad">
+              <div class="text-muted" style="font-size:.85rem">Cargando…</div>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-head"><h5>Reseña reciente</h5></div>
+            <div id="dashResenaReciente"><div class="text-muted" style="font-size:.85rem">Cargando…</div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════ DISPONIBILIDAD ═══════════ -->
+    <section class="content-section" id="sec-disponibilidad">
+      <div class="row g-3">
+        <div class="col-lg-7">
+          <div class="panel h-100">
+            <div class="panel-head">
+              <div>
+                <h5>Días de atención</h5>
+                <div class="rf-tag">RF-22 · RF-23 · RN-23</div>
+              </div>
+            </div>
+            <div class="day-toggle mb-4" id="dayToggle">
+              <div class="day-btn" data-dia="lunes">Lun</div>
+              <div class="day-btn" data-dia="martes">Mar</div>
+              <div class="day-btn" data-dia="miercoles">Mié</div>
+              <div class="day-btn" data-dia="jueves">Jue</div>
+              <div class="day-btn" data-dia="viernes">Vie</div>
+              <div class="day-btn" data-dia="sabado">Sáb</div>
+              <div class="day-btn" data-dia="domingo">Dom</div>
+            </div>
+            <div class="row">
+              <div class="col-6 mb-3"><label class="form-label">Hora de inicio</label><input type="time" class="form-control" id="dispHoraInicio" value="09:00"></div>
+              <div class="col-6 mb-3"><label class="form-label">Hora de fin</label><input type="time" class="form-control" id="dispHoraFin" value="19:00"></div>
+            </div>
+            <button class="btn-gold" id="btnGuardarDisponibilidad">Guardar disponibilidad</button>
+          </div>
+        </div>
+        <div class="col-lg-5">
+          <div class="panel h-100">
+            <div class="panel-head">
+              <div>
+                <h5>Bloquear un horario</h5>
+                <div class="rf-tag">RF-23 · RN-23</div>
+              </div>
+            </div>
+            <p style="color:var(--muted); font-size:.85rem">Marca un día u horario en el que no podrás atender (cita médica, permiso, vacaciones). El bloqueo evita dobles reservas.</p>
+            <form id="formBloqueo">
+              <div class="mb-3"><label class="form-label">Fecha</label><input type="date" class="form-control" id="bloqFecha" required></div>
+              <div class="row">
+                <div class="col-6 mb-3"><label class="form-label">Desde</label><input type="time" class="form-control" id="bloqDesde" required></div>
+                <div class="col-6 mb-3"><label class="form-label">Hasta</label><input type="time" class="form-control" id="bloqHasta" required></div>
+              </div>
+              <button class="btn-outline-gold w-100" type="submit">Bloquear horario</button>
+            </form>
+            <div class="mt-3" id="listaBloqueos"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════ HISTORIAL DE CITAS ═══════════ -->
+    <section class="content-section" id="sec-historial">
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <h5>Historial de citas</h5>
+            <div class="rf-tag">RF-30 · RN-30</div>
+          </div>
+          <select class="form-select" style="width:auto" id="histFiltro">
+            <option value="todas">Todos los estados</option>
+            <option value="completada">Completada</option>
+            <option value="cancelada">Cancelada</option>
+          </select>
+        </div>
+        <div class="dtable-wrap">
+          <table class="dtable" id="histTable">
+            <thead><tr><th>Fecha</th><th>Cliente</th><th>Servicio</th><th>Valor</th><th>Estado</th></tr></thead>
+            <tbody id="histTbody">
+              <tr><td colspan="5" class="text-center text-muted py-3">Cargando historial…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════ MIS CLIENTES ═══════════ -->
+    <section class="content-section" id="sec-clientes">
+      <div class="rf-note">Puedes ver los datos de contacto de tus clientes con citas pendientes (RF-06) y sus preferencias registradas al iniciar el servicio (RF-27).</div>
+      <div id="clientesList">
+        <div class="text-center text-muted py-4">Cargando clientes…</div>
+      </div>
+    </section>
+
+    <!-- ═══════════ MIS RESEÑAS ═══════════ -->
+    <section class="content-section" id="sec-resenas">
+      <div class="rf-note">Solo se muestran reseñas verificadas de citas completadas (RN-83).</div>
+      <div class="row g-3 mb-3">
+        <div class="col-6 col-lg-3"><div class="stat-card"><div class="lbl">Calificación promedio</div><div class="val" id="resenasPromedio">—</div><div class="delta neutral" id="resenasTotal">cargando...</div></div></div>
+        <div class="col-6 col-lg-3"><div class="stat-card"><div class="lbl">5 estrellas</div><div class="val" id="resenasCincoEstrellas">—</div><div class="delta neutral" id="resenasCincoPorcentaje">del total</div></div></div>
+      </div>
+      <div class="row g-3" id="listaResenasBarbero">
+        <div class="col-12 text-center text-muted py-4">Cargando reseñas…</div>
+      </div>
+    </section>
+
+    <!-- ═══════════ GANANCIAS ═══════════ -->
+    <section class="content-section" id="sec-ganancias">
+      <div class="rf-note">Cifras del mes en curso, calculadas con tus citas <b>completadas</b> (RF-30).</div>
+      <div class="row g-3 mb-3">
+        <div class="col-6 col-lg-3"><div class="stat-card"><div class="lbl">Ganancias del mes</div><div class="val" id="gananMes">—</div></div></div>
+        <div class="col-6 col-lg-3"><div class="stat-card"><div class="lbl">Citas completadas</div><div class="val" id="gananCitas">—</div><div class="delta neutral">este mes</div></div></div>
+        <div class="col-6 col-lg-3"><div class="stat-card"><div class="lbl">Ticket promedio</div><div class="val" id="gananTicket">—</div><div class="delta neutral">por cita</div></div></div>
+        <div class="col-6 col-lg-3"><div class="stat-card"><div class="lbl">Tasa de cancelación</div><div class="val" id="gananCancel">—</div><div class="delta neutral">este mes</div></div></div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><div><h5>Ganancias por semana</h5><div class="rf-tag">RF-30</div></div></div>
+        <div class="bar-chart" id="gananSemanas"></div>
+      </div>
+    </section>
+
+    <!-- ═══════════ MI PERFIL ═══════════ -->
+    <section class="content-section" id="sec-perfil">
+      <div class="row g-3">
+        <div class="col-lg-4">
+          <div class="panel text-center">
+            <div class="avatar-lg" id="perfilAvatar">—</div>
+            <h5 class="mb-0" id="perfilNombreDisplay">—</h5>
+            <div class="text-gold" style="font-size:.8rem; letter-spacing:.1em; text-transform:uppercase">Barbero</div>
+            <div style="color:var(--gold); font-size:.85rem" class="mt-2" id="perfilCalificacion">★ —</div>
+            <div class="form-check form-switch mt-4 text-start">
+              <input class="form-check-input" type="checkbox" id="dispSwitch">
+              <label class="form-check-label" for="dispSwitch" style="font-size:.85rem">Disponible para nuevas citas</label>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-8">
+          <div class="panel mb-3">
+            <div class="panel-head"><h5>Información profesional</h5></div>
+            <form id="formPerfilBarbero">
+              <div class="row">
+                <div class="col-md-6 mb-3"><label class="form-label">Nombre completo</label><input class="form-control" id="perfilNombre" required></div>
+                <div class="col-md-6 mb-3"><label class="form-label">Teléfono</label><input class="form-control" id="perfilTelefono"></div>
+              </div>
+              <div class="mb-3"><label class="form-label">Correo</label><input type="email" class="form-control" id="perfilCorreo" required></div>
+              <div class="mb-3"><label class="form-label">Especialidades</label><input class="form-control" id="perfilEspecialidad" placeholder="Ej: Degradados, corte + barba, diseño"></div>
+              <button class="btn-gold" type="submit">Guardar cambios</button>
+            </form>
+          </div>
+          <div class="panel">
+            <div class="panel-head"><h5>Cambiar contraseña</h5></div>
+            <form id="formPasswordBarbero">
+              <div class="row">
+                <div class="col-md-6 mb-3"><label class="form-label">Contraseña actual</label><input type="password" class="form-control" id="passwordActual"></div>
+                <div class="col-md-6 mb-3"><label class="form-label">Nueva contraseña</label><input type="password" class="form-control" id="passwordNueva" placeholder="Mínimo 6 caracteres"></div>
+              </div>
+              <button class="btn-outline-gold" type="submit">Cambiar contraseña</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast-wrap"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/api.js"></script>
+<script>
+  const DIAS_ES = { lunes: 'Lunes', martes: 'Martes', miercoles: 'Miércoles', jueves: 'Jueves', viernes: 'Viernes', sabado: 'Sábado', domingo: 'Domingo' };
+
+  // ─── PANEL: sesión, navegación, sidebar móvil y despacho de secciones ───
+  // "agenda" no sobreescribe el <h1> para conservar el saludo "Hola, Nombre" que se pone abajo.
+  // subtítulo de "Mi agenda" = la fecha de hoy
+  document.querySelector('.sidebar-nav a[data-target="agenda"]').dataset.sub =
+    capitaliza(new Date().toLocaleDateString('es-CO', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }));
+  // se declara antes: inicializarPanel carga la agenda de inmediato y la necesita
+  const idBarbero = Sesion.usuario ? Sesion.usuario.id_usuario : null;
+  const { usuarioActivo, goTo } = inicializarPanel('barbero', {
+    agenda: cargarAgenda, disponibilidad: cargarDisponibilidad, historial: cargarHistorial,
+    clientes: cargarClientesAtendidos, resenas: cargarResenasBarbero, ganancias: cargarGanancias, perfil: cargarPerfilBarbero,
+  }, 'agenda', 'agenda');
+  if (usuarioActivo) document.getElementById('pageTitle').textContent = `Hola, ${usuarioActivo.nombre.split(' ')[0]}`;
+
+  // ═══════════════════════════════════════════════
+  // SOLICITUDES PENDIENTES (todas, sin importar la fecha)
+  // ═══════════════════════════════════════════════
+  async function cargarPendientes() {
+    try {
+      const pendientes = await apiFetch(`/citas/pendientes/${idBarbero}`);
+      const panel = document.getElementById('panelPendientes');
+      const tbody = document.getElementById('pendientesTbody');
+      if (!pendientes.length) {
+        panel.style.display = 'none';
+        return;
+      }
+      panel.style.display = '';
+      tbody.innerHTML = pendientes.map(c => `
+        <tr>
+          <td>${formatoFecha(c.fecha)}</td>
+          <td>${formatoHora(c.hora_inicio)}</td>
+          <td>${escapeHtml(c.cliente_nombre)}</td>
+          <td>${escapeHtml(c.servicio_nombre)}</td>
+          <td>
+            <button class="icon-btn" title="Aceptar cita" onclick="aceptarCita(${c.id_cita})"><i class="bi bi-check-lg"></i></button>
+            <button class="icon-btn" title="Rechazar cita" onclick="rechazarCita(${c.id_cita})" style="color:#e05252"><i class="bi bi-x-lg"></i></button>
+          </td>
+        </tr>`).join('');
+    } catch (err) {
+      document.getElementById('panelPendientes').style.display = 'none';
+    }
+  }
+
+  // ═══════════════════════════════════════════════
+  // MI AGENDA
+  // ═══════════════════════════════════════════════
+  async function cargarAgenda() {
+    try {
+      cargarPendientes();
+      const hoy = hoyLocal();
+      const citas = await apiFetch(`/citas/agenda/${idBarbero}?desde=${hoy}`);
+      const deHoy = citas.filter(c => c.fecha === hoy);
+
+      document.getElementById('statCitasHoy').textContent = deHoy.length;
+      const proxima = citas.find(c => c.estado === 'confirmada' || c.estado === 'pendiente');
+      document.getElementById('statProximaCita').textContent = proxima ? `próxima ${formatoHora(proxima.hora_inicio)}` : 'sin próximas citas';
+
+      const ganancias = deHoy.filter(c => c.estado === 'completada').reduce((sum, c) => sum + Number(c.precio || 0), 0);
+      document.getElementById('statGananciasHoy').textContent = formatoMoneda(ganancias);
+      cargarResumenResenas();
+
+      try {
+        const atendidos = await apiFetch(`/clientes/atendidos/${idBarbero}`);
+        document.getElementById('statClientesTotales').textContent = atendidos.length;
+      } catch { document.getElementById('statClientesTotales').textContent = '—'; }
+
+      const tbody = document.getElementById('agendaTbody');
+      if (!citas.length) {
+        tbody.innerHTML = `<tr><td colspan="6" class="text-center text-muted py-3">No tienes citas agendadas.</td></tr>`;
+      } else {
+        tbody.innerHTML = citas.map(c => {
+          let accion = '';
+          if (c.estado === 'pendiente') {
+            accion = `
+              <button class="icon-btn" title="Aceptar cita (RF-08, RN-08)" onclick="aceptarCita(${c.id_cita})"><i class="bi bi-check-lg"></i></button>
+              <button class="icon-btn" title="Rechazar cita" onclick="rechazarCita(${c.id_cita})" style="color:#e05252"><i class="bi bi-x-lg"></i></button>`;
+          } else if (c.estado === 'confirmada') {
+            accion = `<button class="icon-btn" title="Marcar como completada (RF-26, RN-26)" onclick="completarCitaAgenda(${c.id_cita})"><i class="bi bi-check2-all"></i></button>`;
+          } else {
+            accion = `<span class="text-muted" style="font-size:.78rem">—</span>`;
+          }
+          return `
+            <tr>
+              <td>${c.fecha === hoy ? 'Hoy' : formatoFecha(c.fecha)}</td>
+              <td>${formatoHora(c.hora_inicio)}</td>
+              <td>${escapeHtml(c.cliente_nombre)}</td>
+              <td>${escapeHtml(c.servicio_nombre)}</td>
+              <td><span class="badge-status ${c.estado}">${capitaliza(c.estado)}</span></td>
+              <td>${accion}</td>
+            </tr>`;
+        }).join('');
+      }
+    } catch (err) {
+      document.getElementById('agendaTbody').innerHTML = `<tr><td colspan="6" class="text-center text-muted py-3">No se pudo cargar la agenda.</td></tr>`;
+      showErrorToast(err);
+    }
+  }
+
+  // calificación y última reseña en "Mi agenda"
+  async function cargarResumenResenas() {
+    const caja = document.getElementById('dashResenaReciente');
+    try {
+      const resenas = await apiFetch(`/resenas/barbero/${idBarbero}`);
+      document.getElementById('statCalificacion').textContent = resenas.length ? (resenas.reduce((t, r) => t + r.calificacion, 0) / resenas.length).toFixed(1) : '—';
+      const r = resenas[0];
+      caja.innerHTML = r ? `
+        <div class="mini-review"><div class="av">${inicialesDe(r.cliente_nombre)}</div><div>
+          <div style="font-weight:600;font-size:.85rem">${escapeHtml(r.cliente_nombre)}</div>
+          <div class="stars">${estrellasTexto(r.calificacion)}</div>
+          <p>${r.comentario ? escapeHtml(r.comentario) : '(sin comentario)'}</p></div></div>`
+        : '<div class="text-muted" style="font-size:.85rem">Todavía no tienes reseñas.</div>';
+    } catch (err) { caja.innerHTML = '<div class="text-muted" style="font-size:.85rem">No se pudieron cargar las reseñas.</div>'; }
+  }
+
+  async function aceptarCita(id) {
+    try {
+      await apiFetch(`/citas/${id}/estado`, { method: 'PUT', body: JSON.stringify({ estado: 'confirmada' }) });
+      showToast('Cita aceptada', 'El estado de la cita quedó actualizado.');
+      cargarAgenda();
+    } catch (err) { showErrorToast(err); }
+  }
+
+  async function rechazarCita(id) {
+    const motivo = prompt('¿Por qué rechazas esta cita? (se le mostrará al cliente)');
+    if (motivo === null) return; // canceló el prompt
+    if (!motivo.trim()) { showToast('Falta el motivo', 'Debes indicar por qué rechazas la cita.', 'error'); return; }
+    try {
+      await apiFetch(`/citas/${id}/estado`, { method: 'PUT', body: JSON.stringify({ estado: 'cancelada', motivo_cancelacion: motivo.trim() }) });
+      showToast('Cita rechazada', 'La cita quedó cancelada.');
+      cargarAgenda();
+    } catch (err) { showErrorToast(err); }
+  }
+
+  async function completarCitaAgenda(id) {
+    try {
+      await apiFetch(`/citas/${id}/estado`, { method: 'PUT', body: JSON.stringify({ estado: 'completada' }) });
+      showToast('Servicio completado', 'Se registró en tu historial. RF-26 · RF-30');
+      cargarAgenda();
+    } catch (err) { showErrorToast(err); }
+  }
+
+  // ═══════════════════════════════════════════════
+  // DISPONIBILIDAD
+  // ═══════════════════════════════════════════════
+  let horariosCache = [];
+
+  async function cargarDisponibilidad() {
+    try {
+      cargarBloqueos();
+      horariosCache = await apiFetch(`/barberos/${idBarbero}/horarios`);
+      const diasConHorario = new Set(horariosCache.filter(h => h.disponible).map(h => h.dia_semana));
+
+      document.querySelectorAll('#dayToggle .day-btn').forEach(btn => {
+        btn.classList.toggle('on', diasConHorario.has(btn.dataset.dia));
+      });
+
+      if (horariosCache.length) {
+        document.getElementById('dispHoraInicio').value = horariosCache[0].hora_inicio.slice(0, 5);
+        document.getElementById('dispHoraFin').value = horariosCache[0].hora_fin.slice(0, 5);
+      }
+
+      // resumen para el dashboard de "Mi agenda"
+      const resumen = document.getElementById('dashDisponibilidad');
+      if (!horariosCache.length) {
+        resumen.innerHTML = '<div class="text-muted" style="font-size:.85rem">Aún no has configurado tu disponibilidad.</div>';
+      } else {
+        resumen.innerHTML = horariosCache
+          .filter(h => h.disponible)
+          .map(h => `<div class="avail-row"><span>${DIAS_ES[h.dia_semana]}</span><span>${h.hora_inicio.slice(0,5)} – ${h.hora_fin.slice(0,5)}</span></div>`)
+          .join('') || '<div class="text-muted" style="font-size:.85rem">Sin días activos.</div>';
+      }
+    } catch (err) {
+      showErrorToast(err);
+    }
+  }
+
+  document.querySelectorAll('#dayToggle .day-btn').forEach(btn => {
+    btn.addEventListener('click', () => btn.classList.toggle('on'));
+  });
+
+  document.getElementById('btnGuardarDisponibilidad').addEventListener('click', async () => {
+    try {
+      const horaInicio = document.getElementById('dispHoraInicio').value;
+      const horaFin = document.getElementById('dispHoraFin').value;
+      const horarios = Array.from(document.querySelectorAll('#dayToggle .day-btn')).map(btn => ({
+        dia_semana: btn.dataset.dia,
+        hora_inicio: horaInicio,
+        hora_fin: horaFin,
+        disponible: btn.classList.contains('on') ? 1 : 0,
+      }));
+
+      await apiFetch(`/barberos/${idBarbero}/horarios`, { method: 'PUT', body: JSON.stringify({ horarios }) });
+      showToast('Disponibilidad actualizada', 'Tus clientes verán los nuevos horarios al agendar. RF-22 · RF-23');
+      cargarDisponibilidad(); // refresca el resumen de "Mi agenda" también
+    } catch (err) { showErrorToast(err); }
+  });
+
+  // ═══════════════════════════════════════════════
+  // BLOQUEAR HORARIO (RF-23)
+  // ═══════════════════════════════════════════════
+  document.getElementById('bloqFecha').min = hoyLocal();
+
+  async function cargarBloqueos() {
+    const cont = document.getElementById('listaBloqueos');
+    try {
+      const bloqueos = await apiFetch(`/barberos/${idBarbero}/bloqueos`);
+      cont.innerHTML = bloqueos.map(b => `
+        <div class="avail-row"><span>${formatoFecha(b.fecha)} · ${formatoHora(b.hora_inicio)} – ${formatoHora(b.hora_fin)}</span>
+        <button class="icon-btn danger" title="Quitar bloqueo" onclick="quitarBloqueo(${b.id_bloqueo})"><i class="bi bi-trash"></i></button></div>`).join('')
+        || '<div class="text-muted" style="font-size:.8rem">No tienes horarios bloqueados.</div>';
+    } catch (err) { showErrorToast(err); }
+  }
+
+  document.getElementById('formBloqueo').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    try {
+      await apiFetch(`/barberos/${idBarbero}/bloqueos`, { method: 'POST', body: JSON.stringify({
+        fecha: document.getElementById('bloqFecha').value, hora_inicio: document.getElementById('bloqDesde').value, hora_fin: document.getElementById('bloqHasta').value }) });
+      showToast('Horario bloqueado', 'Ese espacio ya no se ofrece a los clientes. RF-23');
+      e.target.reset();
+      cargarBloqueos();
+    } catch (err) { showErrorToast(err); }
+  });
+
+  async function quitarBloqueo(id) {
+    try {
+      await apiFetch(`/barberos/${idBarbero}/bloqueos/${id}`, { method: 'DELETE' });
+      showToast('Bloqueo eliminado', 'El horario vuelve a estar disponible.');
+      cargarBloqueos();
+    } catch (err) { showErrorToast(err); }
+  }
+
+  // ═══════════════════════════════════════════════
+  // GANANCIAS (cifras reales del mes)
+  // ═══════════════════════════════════════════════
+  async function cargarGanancias() {
+    try {
+      const r = await apiFetch('/reportes/resumen');
+      document.getElementById('gananMes').textContent = formatoMoneda(r.ingresos_mes);
+      document.getElementById('gananCitas').textContent = r.citas_completadas;
+      document.getElementById('gananTicket').textContent = formatoMoneda(r.ticket_promedio);
+      document.getElementById('gananCancel').textContent = r.tasa_cancelacion + '%';
+      const max = Math.max(...r.semanas, 1);
+      document.getElementById('gananSemanas').innerHTML = r.semanas.map((v, i) =>
+        `<div class="bar-col"><div class="bar-val">${formatoMoneda(v)}</div><div class="bar" style="height:${Math.round(v / max * 140)}px"></div><div class="bar-lbl">Sem ${i + 1}</div></div>`).join('');
+    } catch (err) { showErrorToast(err); }
+  }
+
+  // ═══════════════════════════════════════════════
+  // HISTORIAL
+  // ═══════════════════════════════════════════════
+  let historialCache = [];
+
+  async function cargarHistorial() {
+    const tbody = document.getElementById('histTbody');
+    try {
+      historialCache = await apiFetch(`/citas/historial/${idBarbero}`);
+      renderHistorial();
+    } catch (err) {
+      tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted py-3">No se pudo cargar el historial.</td></tr>`;
+      showErrorToast(err);
+    }
+  }
+
+  function renderHistorial() {
+    const estado = document.getElementById('histFiltro').value;
+    const tbody = document.getElementById('histTbody');
+    const filtradas = historialCache.filter(c =>
+      ['completada', 'cancelada'].includes(c.estado) && (estado === 'todas' || c.estado === estado)
+    );
+
+    if (!filtradas.length) {
+      tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted py-3">Todavía no tienes citas completadas o canceladas.</td></tr>`;
+      return;
+    }
+    tbody.innerHTML = filtradas.map(c => `
+      <tr>
+        <td>${formatoFecha(c.fecha)}</td>
+        <td>${escapeHtml(c.cliente_nombre)}</td>
+        <td>${escapeHtml(c.servicio_nombre)}</td>
+        <td>${formatoMoneda(c.precio || 0)}</td>
+        <td><span class="badge-status ${c.estado}">${capitaliza(c.estado)}</span></td>
+      </tr>`).join('');
+  }
+
+  document.getElementById('histFiltro').addEventListener('change', renderHistorial);
+
+  // ═══════════════════════════════════════════════
+  // MIS CLIENTES
+  // ═══════════════════════════════════════════════
+  async function cargarClientesAtendidos() {
+    const cont = document.getElementById('clientesList');
+    try {
+      const clientes = await apiFetch(`/clientes/atendidos/${idBarbero}`);
+      if (!clientes.length) {
+        cont.innerHTML = '<div class="text-center text-muted py-4">Todavía no has atendido clientes.</div>';
+        return;
+      }
+      cont.innerHTML = clientes.map(c => `
+        <div class="client-row">
+          <div class="c-info">
+            <div class="c-avatar">${inicialesDe(c.nombre)}</div>
+            <div><div class="c-name">${escapeHtml(c.nombre)}</div><div class="c-meta">${c.citas_con_el} cita${c.citas_con_el === 1 ? '' : 's'} · última ${formatoFecha(c.ultima_cita)}</div></div>
+          </div>
+          <span class="text-muted" style="font-size:.78rem">${escapeHtml(c.telefono || '—')}</span>
+        </div>`).join('');
+    } catch (err) {
+      cont.innerHTML = '<div class="text-center text-muted py-4">No se pudieron cargar tus clientes.</div>';
+      showErrorToast(err);
+    }
+  }
+
+  // ─── SWITCH DISPONIBILIDAD (visual, del perfil) ───
+  const statusPill = document.getElementById('statusPill');
+  document.getElementById('dispSwitch').addEventListener('change', async function() {
+    try {
+      await apiFetch(`/barberos/${idBarbero}`, { method: 'PUT', body: JSON.stringify({ disponible: this.checked ? 1 : 0 }) });
+      if (this.checked) {
+        statusPill.classList.remove('off');
+        statusPill.innerHTML = '<span class="dot"></span> Disponible ahora';
+      } else {
+        statusPill.classList.add('off');
+        statusPill.innerHTML = '<span class="dot"></span> No disponible';
+      }
+      showToast('Estado actualizado', this.checked ? 'Ahora apareces como disponible. RF-51' : 'Ya no recibirás nuevas citas. RF-51');
+    } catch (err) {
+      this.checked = !this.checked; // revierte el switch si falló
+      showErrorToast(err);
+    }
+  });
+
+  // ═══════════════════════════════════════════════
+  // RESEÑAS
+  // ═══════════════════════════════════════════════
+  async function cargarResenasBarbero() {
+    const cont = document.getElementById('listaResenasBarbero');
+    try {
+      const resenas = await apiFetch(`/resenas/barbero/${idBarbero}`);
+
+      document.getElementById('resenasTotal').textContent = `${resenas.length} reseña${resenas.length === 1 ? '' : 's'}`;
+      const promedio = resenas.length ? (resenas.reduce((s, r) => s + r.calificacion, 0) / resenas.length).toFixed(1) : '—';
+      document.getElementById('resenasPromedio').textContent = promedio;
+      const cinco = resenas.filter(r => r.calificacion === 5).length;
+      document.getElementById('resenasCincoEstrellas').textContent = cinco;
+      document.getElementById('resenasCincoPorcentaje').textContent = resenas.length ? `${Math.round((cinco / resenas.length) * 100)}% del total` : 'del total';
+
+      if (!resenas.length) {
+        cont.innerHTML = '<div class="col-12 empty-state"><i class="bi bi-star"></i>Todavía no tienes reseñas.</div>';
+        return;
+      }
+      cont.innerHTML = resenas.map(r => `
+        <div class="col-md-6 col-lg-4">
+          <div class="review-card">
+            <div class="reviewer"><div class="av">${inicialesDe(r.cliente_nombre)}</div><div><div class="name">${escapeHtml(r.cliente_nombre)}</div><div class="date">${formatoFecha(aTextoFecha(new Date(r.fecha)))} · ${escapeHtml(r.servicio_nombre)}</div></div></div>
+            <div class="stars">${'★'.repeat(r.calificacion)}${'☆'.repeat(5 - r.calificacion)}</div>
+            ${r.comentario ? `<p>${escapeHtml(r.comentario)}</p>` : '<p class="text-muted">(sin comentario)</p>'}
+          </div>
+        </div>`).join('');
+    } catch (err) {
+      cont.innerHTML = '<div class="col-12 empty-state">No se pudieron cargar tus reseñas.</div>';
+      showErrorToast(err);
+    }
+  }
+
+  // ═══════════════════════════════════════════════
+  // MI PERFIL
+  // ═══════════════════════════════════════════════
+  async function cargarPerfilBarbero() {
+    try {
+      const perfil = await apiFetch('/auth/perfil');
+      document.getElementById('perfilNombre').value = perfil.nombre;
+      document.getElementById('perfilTelefono').value = perfil.telefono || '';
+      document.getElementById('perfilCorreo').value = perfil.correo;
+      document.getElementById('perfilEspecialidad').value = perfil.especialidad || '';
+      document.getElementById('perfilNombreDisplay').textContent = perfil.nombre;
+      document.getElementById('perfilAvatar').textContent = inicialesDe(perfil.nombre);
+      const propio = (await apiFetch('/barberos')).find(b => b.id_usuario === idBarbero);
+      if (propio) {
+        document.getElementById('dispSwitch').checked = !!propio.disponible;
+        document.getElementById('perfilCalificacion').textContent = propio.total_resenas ? `★ ${propio.calificacion_promedio} (${propio.total_resenas})` : '★ Sin reseñas aún';
+      }
+    } catch (err) { showErrorToast(err); }
+  }
+
+  document.getElementById('formPerfilBarbero').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    try {
+      const data = await apiFetch('/auth/perfil', {
+        method: 'PUT',
+        body: JSON.stringify({
+          nombre: document.getElementById('perfilNombre').value.trim(),
+          telefono: document.getElementById('perfilTelefono').value.trim(),
+          correo: document.getElementById('perfilCorreo').value.trim(),
+          especialidad: document.getElementById('perfilEspecialidad').value.trim(),
+        }),
+      });
+      Sesion.actualizarUsuario({ nombre: data.usuario.nombre, correo: data.usuario.correo });
+      document.getElementById('userChipName').textContent = data.usuario.nombre;
+      document.getElementById('userChipAvatar').textContent = inicialesDe(data.usuario.nombre);
+      document.getElementById('perfilNombreDisplay').textContent = data.usuario.nombre;
+      document.getElementById('perfilAvatar').textContent = inicialesDe(data.usuario.nombre);
+      showToast('Perfil actualizado', 'Tus cambios se guardaron correctamente.');
+    } catch (err) { showErrorToast(err); }
+  });
+
+  document.getElementById('formPasswordBarbero').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const actual = document.getElementById('passwordActual').value;
+    const nueva = document.getElementById('passwordNueva').value;
+    if (!actual || !nueva) { showToast('Faltan datos', 'Escribe tu contraseña actual y la nueva.', 'error'); return; }
+    try {
+      await apiFetch('/auth/perfil', { method: 'PUT', body: JSON.stringify({ contrasena_actual: actual, nueva_contrasena: nueva }) });
+      document.getElementById('formPasswordBarbero').reset();
+      showToast('Contraseña actualizada', 'Úsala la próxima vez que inicies sesión.');
+    } catch (err) { showErrorToast(err); }
+  });
+</script>
+</body>
+</html>
